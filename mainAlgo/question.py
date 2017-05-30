@@ -1,4 +1,4 @@
-class Question(object):
+class Exercice(object):
     """Exercice lambda	"""
 
     def __init__(self, nId, enonce, reponse, themes, competences, discriminations, facilite=1):
