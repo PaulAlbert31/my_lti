@@ -1,12 +1,13 @@
 class Exercice(object):
-    """Exercice composé de questions    """
+    """Exercice lambda	"""
 
-    def __init__(self, nId, enonce, questions, themes, competences):
+    def __init__(self, nId, enonce, reponse, themes, competences, discriminations, facilite=1):
         self.nId = nId
         self.enonce = enonce
-        self.questions = questions
+        self.reponse = reponse
         self.themes = themes
         self.competences = competences
-    
-
-     
+        self.discriminations = discriminations
+        self.facilite = facilite 
+		
+		

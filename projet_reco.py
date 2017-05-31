@@ -13,10 +13,11 @@ from datetime import datetime
 from get_name import get_name
 from get_id import get_id
 from match_exo import match_exo
+import mainAlgo.main as algo
 
 reload(sys)
 sys.setdefaultencoding('utf8')
-VERSION = '1.03'
+VERSION = '1.08'
 UPLOAD_FOLDER='exos/'
 ALLOWED_EXTENSIONS=set(['xlsx'])
 ALLOWED_EXTENSIONS2=set(['tex'])
@@ -294,6 +295,10 @@ def gen_exo(lti=lti):
     database = MySQLdb.connect(host="127.0.0.1",port=3306,user="root",passwd="",db="moodle")
     cHandler = database.cursor()
     cours_id=lti.user_id[0]
+    cHandler.execute("SELECT id_theme,theme FROM mdl_theme_recommendation WHERE cours_id=%s",cours_id)
+    themes=cHandler.fetchall()
+    for items in themes:
+        algo.ajouterCompetence(items[0],items[1])
     date=datetime.today().strftime('%Y-%m-%d')
 #    cHandler.execute('SELECT * FROM mdl_exos_eleves_recommendation WHERE date_created>sysdate-6 AND cours_id=%s',cours_id)
 #    will=cHandler.fetchall()

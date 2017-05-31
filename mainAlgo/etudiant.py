@@ -6,7 +6,7 @@ class Etudiant(object):
         self.prenom = prenom
         self.nom = nom
         self.niveauxCompetences = niveauxCompetences ## {1:theta_1, 2:theta_2, ...}
-        self.questionsRepondues = {} ## {question.idNb: -1 non repondue, 0 faux ou 1 juste, ...}
+        self.resultats = {} ## {ex.idNb: -1 non repondue, 0 faux ou 1 juste}
         
     def getNiveau(self, competenceId):
         return self.niveauxCompetences[competenceId]
