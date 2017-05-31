@@ -13,7 +13,7 @@ from datetime import datetime
 from get_name import get_name
 from get_id import get_id
 from match_exo import match_exo
-import mainAlgo.main as algo
+import mainAlgo.main as main
 
 reload(sys)
 sys.setdefaultencoding('utf8')
@@ -115,7 +115,7 @@ def majDB(lti=lti):
     cHandler = database.cursor() 
     cHandler.execute("CREATE TABLE IF NOT EXISTS mdl_exos_recommendation (num_exo integer, id_theme integer, id_savoir_faire integer, cours_id integer)")
     cHandler.execute("DELETE FROM mdl_exos_recommendation WHERE cours_id=%s",lti.user_id[0])
-    cHandler.execute("CREATE TABLE IF NOT EXISTS mdl_comp_recommendation (id_savoir_faire integer, savoir_faire text, cours_id integer) ")  
+    cHandler.execute("CREATE TABLE IF NOT EXISTS mdl_comp_recommendation (id_savoir_faire integer, savoir_faire text, id_theme integer, cours_id integer) ")  
     cHandler.execute("DELETE FROM mdl_comp_recommendation WHERE cours_id=%s",lti.user_id[0])
     cHandler.execute("CREATE TABLE IF NOT EXISTS mdl_theme_recommendation (id_theme integer, theme text, cours_id integer) ")  
     cHandler.execute("DELETE FROM mdl_theme_recommendation WHERE cours_id=%s",lti.user_id[0])
@@ -134,6 +134,8 @@ def majDB(lti=lti):
     tab_sf=[]
     tab_sf.append([])
     tab_sft=[]
+    tab_sft2=[]
+    tab_sft2.append([])
     tab_sft.append([])
     tab_t=[]
     tab_t.append([])
@@ -146,6 +148,8 @@ def majDB(lti=lti):
     for r in range(1,sheet3.nrows):
         tab_sft.append([])
         tab_sft[int(sheet3.cell(r,0).value)].append(sheet3.cell(r,2).value)
+        tab_sft2.append([])
+        tab_sft2[int(sheet3.cell(r,0).value)].append(sheet3.cell(r,1).value)
     #Associe les themes a leur id
     for r in range(1,sheet0.nrows):
         tab_t.append([])
@@ -157,15 +161,20 @@ def majDB(lti=lti):
             value=tab_sf[r][j]
             cursor.execute("INSERT INTO mdl_exos_recommendation (num_exo, id_savoir_faire, cours_id, id_theme) VALUES (%s,%s,%s,%s)", \
                        (r,value,cours_id,theme)) 
-    for r in range(1,sheet3.nrows):
-        for j in range(0,len(tab_sft[r])):
-            cursor.execute("INSERT INTO mdl_comp_recommendation (id_savoir_faire, savoir_faire, cours_id) VALUES (%s,%s,%s)",(r,tab_sft[r][j],lti.user_id[0]))
     for r in range(1,sheet0.nrows):
         for j in range(0,len(tab_t[r])):
-            cursor.execute("INSERT INTO mdl_theme_recommendation (id_theme, theme, cours_id) VALUES (%s,%s,%s)",(r,tab_t[r][j],lti.user_id[0]))
-    # On supprime le fichier telechargé pour ne pas avoir de conflits lors d'une mise a jour
-    #os.remove(".exos/bdd.xlsx")
-    
+            cursor.execute("INSERT INTO mdl_theme_recommendation (id_theme, theme, cours_id) VALUES (%s,%s,%s)",(r,tab_t[r][j].lower(),lti.user_id[0]))
+    cursor.close()
+    database.commit()
+    database.close()
+    database = MySQLdb.connect(host="127.0.0.1",port=3306,user="root",passwd="",db="moodle")
+    cursor = database.cursor() 
+    for r in range(1,sheet3.nrows):
+       cursor.execute("SELECT DISTINCT id_theme FROM mdl_theme_recommendation WHERE theme=%s",tab_sft2[r][0])
+       id_theme=cursor.fetchall()
+       if not id_theme==():
+           cursor.execute("INSERT INTO mdl_comp_recommendation (id_savoir_faire, savoir_faire, id_theme, cours_id) VALUES (%s,%s,%s,%s)",(r,tab_sft[r][0].lower(),id_theme[0][0],lti.user_id[0]))
+
     # Close the cursor
     cursor.close()
 
@@ -174,7 +183,7 @@ def majDB(lti=lti):
 
     # Close the database connection
     database.close()
-    return render_template("upload_reussit.html",lti=lti)
+    return render_template("upload_reussit.html")
 
 @app.route('/up_latex', methods=['GET','POST'])
 @lti(request='session', error=error, role='staff', app=app)
@@ -287,18 +296,54 @@ def teachers_class(lti=lti):
 			
 	return render_template('displayStuds2.html', results=results, coursename=coursename)
  
-    
+@app.route('/gen',methods=['GET','POST'])
+@lti(request='session', error=error,role = 'staff', app=app)
+def gen(lti=lti):
+    database = MySQLdb.connect(host="127.0.0.1",port=3306,user="root",passwd="",db="moodle")
+    c = database.cursor()
+    cours_id=lti.user_id[0]
+    c.execute('SELECT DISTINCT id_savoir_faire,savoir_faire FROM mdl_comp_recommendation WHERE cours_id=%s',cours_id)
+    sf=c.fetchall()
+    return render_template("gen.html",sf=sf)
+
 @app.route('/gen_exo',methods=['GET','POST'])
 @lti(request='session', error=error,role = 'staff', app=app)
 def gen_exo(lti=lti):
     res=get_eleves(lti)
+    algo=main.Main()
     database = MySQLdb.connect(host="127.0.0.1",port=3306,user="root",passwd="",db="moodle")
     cHandler = database.cursor()
     cours_id=lti.user_id[0]
     cHandler.execute("SELECT id_theme,theme FROM mdl_theme_recommendation WHERE cours_id=%s",cours_id)
     themes=cHandler.fetchall()
     for items in themes:
-        algo.ajouterCompetence(items[0],items[1])
+        algo.ajouterTheme(int(items[0]),items[1])
+    cHandler.execute("SELECT id_savoir_faire, savoir_faire FROM mdl_comp_recommendation WHERE cours_id=%s",cours_id)
+    comp=cHandler.fetchall()
+    for items in comp:
+        cHandler.execute("SELECT id_theme FROM mdl_comp_recommendation WHERE id_savoir_faire=%s",items[0])
+        id_theme=cHandler.fetchall()
+        if not id_theme==():
+            algo.ajouterCompetence(int(items[0]),items[1],id_theme[0][0],[])
+    for eleve in res:
+        algo.ajouterEtudiant(eleve[0], eleve[2], eleve[1], {}, {})
+    i=0
+    while not get_exo(i)=="" or i<256:
+        text=get_exo(i)
+        cHandler.execute("SELECT DISTINCT id_theme FROM mdl_exos_recommendation WHERE num_exo=%s",i)
+        id_theme=cHandler.fetchall()
+        cHandler.execute("SELECT DISTINCT m1.id_savoir_faire FROM mdl_exos_recommendation m1 JOIN mdl_comp_recommendation m2 ON m1.id_savoir_faire=m2.id_savoir_faire WHERE m1.num_exo=%s",i)
+        id_comp=cHandler.fetchall()
+        tab_id_theme=[]
+        tab_id_comp=[]
+        for ids in id_theme:
+            tab_id_theme.append(int(ids[0]))
+        for ids in id_comp:
+#            if not int(ids[0])==176:
+            tab_id_comp.append(int(ids[0]))
+        algo.ajouterExercice(i,text,"",tab_id_theme,tab_id_comp,{}, 1)
+        i+=1
+    comp=request.form.getlist('comp')
     date=datetime.today().strftime('%Y-%m-%d')
 #    cHandler.execute('SELECT * FROM mdl_exos_eleves_recommendation WHERE date_created>sysdate-6 AND cours_id=%s',cours_id)
 #    will=cHandler.fetchall()
@@ -308,17 +353,17 @@ def gen_exo(lti=lti):
 #        cHandler.execute('DELETE * FROM mdl_exos_eleves_recommendation WHERE cours_id=%s AND realised=1',cours_id)
         for eleves in res:
             id_stud=eleves[0]
-            exos=[5,6,53,45,78,96,152,156,211]
-            for id_exo in exos:
-                cHandler.execute("INSERT INTO mdl_exos_eleves_recommendation (id_stud, id_exo, cours_id,\
-                date_created, realised) VALUES (%s,%s,%s,%s,0)",(id_stud,id_exo,cours_id,date))
+            exos=algo.genererFE(id_stud,map(int, comp),8)
+#            for id_exo in exos:
+#                cHandler.execute("INSERT INTO mdl_exos_eleves_recommendation (id_stud, id_exo, cours_id,\
+#                date_created, realised) VALUES (%s,%s,%s,%s,0)",(id_stud,id_exo,cours_id,date))
         # Close the cursor
         cHandler.close()
         # Commit the transaction
-        database.commit()        
+        database.commit()
         # Close the database connection
         database.close()
-        return render_template('gen_exo.html',res=res)
+        return render_template('testexo.html',res=exos)
     return render_template('not_yet.html')
 
 @app.route('/select_stud',methods=['GET','POST'])

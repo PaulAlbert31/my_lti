@@ -1,4 +1,6 @@
+# -*- coding: utf-8 -*-
 from math import exp
+import MySQLdb
 
 
 
@@ -11,8 +13,9 @@ def proba_juste(theta, d, facilite, Q):
     """Donne en fonction des paramètres la probabilité que la réponse soit juste"""
     K = len(theta)
     s = facilite
-    for k in range(K):
-        s += Q[k]*theta[k]*d[k]
+    for k in range(1,K):
+        if not k==172:
+            s += Q[k]*theta[k]*d[k]
     return sigmoid(s)
 
 

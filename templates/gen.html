@@ -1,0 +1,12 @@
+<h1>Quelles compétences favoriser cette semaine ?</h1>
+<body>
+<form action="{{url_for('gen_exo')}}" method=post >
+	<input type=submit value="Valider les competences">	
+	<br>
+  {%for items in sf%}
+  <input name="comp" id="{{items[0]}}" value="{{items[0]}}" type="checkbox">
+  <label for="{{items[0]}}"><p>{{items[1].decode("latin1")}}</p></label>
+  {%endfor%}
+  <input type=submit value="Valider les competences">
+</form>
+</body>

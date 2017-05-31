@@ -1,5 +1,6 @@
+# -*- coding: utf-8 -*- 
 from fonctions_utiles import vraisemblance, esperanceVraisemblance
-import scipy
+from scipy import optimize
 import question, theme, competence, etudiant, exercice
 
 
@@ -19,7 +20,7 @@ class Main(object):
     #--------------------------------------------------------------------------
 
     def genererFE(self, idEtudiant, idCompetences, nbExercices):
-        """Génère une Feuille d'Exercices correspondant à un élève et à des compétences"""
+        """Genere une Feuille d'Exercices correspondant à un élève et à des compétences"""
         return [self.choisirExercice(idEtudiant, idCompetences) for i in range(nbExercices)]
         
         
@@ -31,7 +32,7 @@ class Main(object):
         
         bnds = [[-10, 10]]*len(self.competences)
         f = lambda x : -vraisemblance(questions, x, matriceQ, reponses)
-        opt = scipy.optimize.minimize(f, [0]*len(self.competences), bounds=bnds)
+        opt = optimize.minimize(f, [0]*len(self.competences), bounds=bnds)
 #        print(opt.x)
 #        print(-opt.fun)
         etudiant.setNiveaux(opt.x)
@@ -53,7 +54,7 @@ class Main(object):
                 matQChoisie = [1 if k in exo.competences else 0 for k in self.competences]
                 bnds = [[-10, 10]]*len(self.competences)
                 f = lambda x : -esperanceVraisemblance(resultats, [exo], x,  matriceQ, [matQChoisie], reponses)
-                opt = scipy.optimize.minimize(f, [0]*len(self.competences), bounds=bnds)
+                opt = optimize.minimize(f, [0]*len(self.competences), bounds=bnds)
                 progres = sum([opt.x[c.nId]-etudiant.niveauxCompetences[c.nId] for c in competences])
                 if progres >= maxProgres:
                     maxProgres = progres
@@ -100,7 +101,7 @@ class Main(object):
                     discriminations[k] = 1
                 else:
                     discriminations[k] = -1                    
-        self.questions[idExercice] = exercice.Exercice(idExercice, enonce, reponse, themes=[self.themes[i] for i in idThemes], competences=[self.competences[i] for i in idCompetences], discriminations=discriminations, facilite=facilite)
+        self.exercices[idExercice] = exercice.Exercice(idExercice, enonce, reponse, themes=[self.themes[i] for i in idThemes], competences=[self.competences[i] for i in idCompetences], discriminations=discriminations, facilite=facilite)
 
     def ajouterEtudiant(self,  idEtudiant, prenom, nom, niveauxCompetences, resultats):
         for k in self.competences:
@@ -134,12 +135,9 @@ if __name__ == "__main__":
 
     main.ajouterEtudiant(0, "Bob", "Smith", {}, {0:0, 1:1, 6:0})
     
-<<<<<<< HEAD
     bob = main.etudiants[0]
 
     bob.resultats[5]=1
-=======
->>>>>>> 731396a84f710e75635c4545912a8ffa9d8f90b0
     
     main.actualiserNiveaux(0)
     print("?")

@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 class Competence(object):
     """Compétence mathémathique
     comme par exemple 'Réduire une fraction'    """

@@ -23,6 +23,8 @@ def get_exo(num_exo):
             data=data[pos_debut3+9:]
         if pos_debut3>pos_debut1 and pos_debut2>pos_debut1:
             data=data[pos_debut1+10:]
+        if pos_debut1==-1 and pos_debut3 ==-1 and pos_debut2==-1:
+            return ""
     pos_fin1=0
     pos_fin2=0
     pos_fin3=0
@@ -50,12 +52,17 @@ def get_exo(num_exo):
     if not debutit == -1:
         if not finit == -1 and not postexotraite[debutit+6:finit]=='':
             postexotraite=postexotraite[:debutit-1]+"Duree conseillee "+postexotraite[debutit+6:finit]+'$\\\\$'+postexotraite[finit+1:]
+    debutit=postexotraite.find('exo{')
+    finit=postexotraite.find('}',debutit)
+    if not debutit == -1:
+        if not finit == -1 and not postexotraite[debutit+6:finit]=='':
+            postexotraite=postexotraite[:debutit-1]+postexotraite[debutit+4:finit]+'$\\\\$'+postexotraite[finit+1:]
     exotraite = "$\\textbf{Exercice "+str(num_exo1)+"}$"+"$\\\\$"+postexotraite.replace('%','')\
                 .replace('-','').replace('\question','$\\\\Question :$').replace('\squestion','$\\\\Sous-question$')\
                 .replace('\\RR','\\mathbb R').replace('\\ZZ','\\mathbb Z').replace('\\NN','\\mathbb N')\
                 .replace('\\QQ','\\mathbb Q').replace('\\d','').replace('\\eps','\\epsilon').replace('\\epsilonilon','\\epsilon')\
                 .replace('\\begin{enumerate}','').replace('\\end{enumerate}','').replace('\\item','$\\\\$').replace('[a)]','')\
                 .replace('{\\trefle}','').replace('{\\coeur}','').replace('\\exo{}','').replace('\\exosd{}','').replace('\\begin{multicols}{2}','')\
-                .replace('\\end{multicols}','').replace('{\\ccoeur}','').replace('\\section{Complexes}','')\
+                .replace('\\end{multicols}','').replace('{\\ccoeur}','').replace('{\\ttrefle}','').replace('\\section{Complexes}','')\
                 .replace('\\begin{exo}{}{}','').replace('\\end{exo}','').replace('[(a)]','').replace('\\section{Equations différentielles}','')
     return exotraite

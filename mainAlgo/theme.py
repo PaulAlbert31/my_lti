@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 class Theme(object):
     """Thème de mathématiques 
     comme par exemple Arithmétique"""
