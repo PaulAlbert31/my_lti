@@ -359,7 +359,7 @@ def val_exos(lti=lti):
         for items in results:
             resultats.append(get_exo(str(items)))
         return render_template('exos_val.html',resultats=resultats, num_resultats=results, nom=nom[0], id_stud=id_stud)
-    return url_for('check_exo')
+    return url_for('checkexo')
 
 @app.route('/send_exo',methods=['GET','POST'])
 @lti(request='session', error=error,role = 'staff', app=app)
@@ -384,7 +384,7 @@ def send_exo(lti=lti):
         database.close()    
         return render_template('exosok.html')
     else:
-        return url_for(checkexo)
+        return url_for('checkexo')
         
 @app.route('/get_my_exos',methods=['GET','POST'])
 @lti(request='session', error=error, app=app)

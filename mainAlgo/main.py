@@ -147,6 +147,8 @@ if __name__ == "__main__":
     main.ajouterEtudiant(0, "Bob", "Smith", {}, {0:0, 1:1, 6:0})
     
     bob = main.etudiants[0]
+
+    bob.resultats[5]=1
     
     main.actualiserNiveaux(bob)
     print("?")
