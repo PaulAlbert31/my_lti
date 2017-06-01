@@ -22,10 +22,11 @@ def proba_juste(theta, d, facilite, Q):
 def proba_reponse(theta, d, facilite, Q, reponse):
     """Donne en fonction des paramètres la probabilité que la réponse corresponde à reponse (=0 ou 1)"""
     p = proba_juste(theta, d, facilite, Q)
-    if reponse==1:
-        return p
-    else:
-        return 1-p
+    return (1-p+reponse*(2*p-1))
+#    if reponse==1:
+#        return p
+#    else:
+#        return 1-p
 
 
 

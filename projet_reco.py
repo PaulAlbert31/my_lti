@@ -23,6 +23,7 @@ UPLOAD_FOLDER='exos/'
 ALLOWED_EXTENSIONS=set(['xlsx'])
 ALLOWED_EXTENSIONS2=set(['tex'])
 app = Flask(__name__)
+algo=main.Main()
 app.config['UPLOAD_FOLDER']=UPLOAD_FOLDER
 app.config.from_object('config')
 
@@ -61,10 +62,9 @@ def index(lti=lti):
     cHandler.execute("SHOW TABLES LIKE 'mdl_comp_recommendation'")
     condition=cHandler.fetchall()
     if condition==():
-        return url_for('upload_exo')
+        return redirect(url_for('upload_exo_2'))
     if not os.path.isfile('data.json'):
         get_params(lti)
-    algo=main.Main()
     cours_id=lti.user_id[0]
     cHandler.execute("SELECT id_theme,theme FROM mdl_theme_recommendation WHERE cours_id=%s",cours_id)
     themes=cHandler.fetchall()
@@ -79,7 +79,7 @@ def index(lti=lti):
             algo.ajouterCompetence(int(items[0]),items[1],id_theme[0][0],[])
     with open('data.json') as data_file:    
         data = json.load(data_file)
-    for studs in data:
+    for studs in data["eleves"]:
         algo.ajouterEtudiant(studs['id'], studs['prenom'], studs['nom'], studs['comp'], {})
     i=0
     while not get_exo(i)=="" or i<256:
@@ -96,7 +96,7 @@ def index(lti=lti):
             tab_id_comp.append(int(ids[0]))
         algo.ajouterExercice(i,text,"",tab_id_theme,tab_id_comp,{}, 1)
         i+=1
-    return render_template('index.html', lti=lti,algo=algo)
+    return render_template('index.html', lti=lti)
 
 @app.route('/index2', methods=['GET', 'POST'])
 @lti(request='session', error=error, app=app)
@@ -125,7 +125,30 @@ def allowed_file(filename):
 def allowed_file2(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS2
-    
+
+@app.route('/upload_exo_2', methods=['GET','POST'])
+@lti(request='session', error=error, role='staff', app=app)
+def upload_exo_2(lti=lti):
+    if request.method == 'POST':
+        # check if the post request has the file part
+        if 'file' not in request.files:
+            flash('No file part')
+            return redirect(request.url)
+        file = request.files['file']
+        # if user does not select file, browser will
+        # submit a empty part without filename
+        if file.filename == '':
+            flash('No selected file')
+            return redirect(request.url)
+        if file and allowed_file(file.filename):
+            #filename = secure_filename(file.filename)
+            file.name='bdd_exos'
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], 'bdd.xlsx'))
+            return redirect(url_for('majDB2'))
+        if file and not allowed_file(file.filename):
+            flash('Mauvais format, les formats possibles sont : ' + str(ALLOWED_EXTENSIONS).split('set([')[-1].split('])')[0])
+    return render_template('testupload.html', lti=lti)
+
 @app.route('/upload_exo', methods=['GET','POST'])
 @lti(request='session', error=error, role='staff', app=app)
 def upload_exo(lti=lti):
@@ -225,6 +248,83 @@ def majDB(lti=lti):
     # Close the database connection
     database.close()
     return render_template("upload_reussit.html")
+
+@app.route('/maj_db_2', methods=['GET','POST'])
+@lti(request='session', error=error, role='staff', app=app)
+def majDB2(lti=lti):
+    database = MySQLdb.connect(host="127.0.0.1",port=3306,user="root",passwd="",db="moodle")
+    cHandler = database.cursor() 
+    cHandler.execute("CREATE TABLE IF NOT EXISTS mdl_exos_recommendation (num_exo integer, id_theme integer, id_savoir_faire integer, cours_id integer)")
+    cHandler.execute("DELETE FROM mdl_exos_recommendation WHERE cours_id=%s",lti.user_id[0])
+    cHandler.execute("CREATE TABLE IF NOT EXISTS mdl_comp_recommendation (id_savoir_faire integer, savoir_faire text, id_theme integer, cours_id integer) ")  
+    cHandler.execute("DELETE FROM mdl_comp_recommendation WHERE cours_id=%s",lti.user_id[0])
+    cHandler.execute("CREATE TABLE IF NOT EXISTS mdl_theme_recommendation (id_theme integer, theme text, cours_id integer) ")  
+    cHandler.execute("DELETE FROM mdl_theme_recommendation WHERE cours_id=%s",lti.user_id[0])
+    cHandler.execute("CREATE TABLE IF NOT EXISTS mdl_exos_eleves_recommendation (id_stud integer, id_exo integer, cours_id integer, date_created date, realised boolean) ")  
+    # Open the workbook and define the worksheet
+    book = xlrd.open_workbook("./exos/bdd.xlsx")
+    sheets = book.sheet_names()
+    sheet0 = book.sheet_by_name(sheets[0])
+    sheet1 = book.sheet_by_name(sheets[1])
+    sheet2 = book.sheet_by_name(sheets[2])
+    sheet3 = book.sheet_by_name(sheets[3])
+    # Get the cursor, which is used to traverse the database, line by line
+    cursor = database.cursor()
+    cours_id = lti.user_id[0]
+    # Tableau pour stocker les différents savoirs faire associés aux exercices
+    tab_sf=[]
+    tab_sf.append([])
+    tab_sft=[]
+    tab_sft2=[]
+    tab_sft2.append([])
+    tab_sft.append([])
+    tab_t=[]
+    tab_t.append([])
+    theme=[]
+    #Trie les différents savoirs et les attache aux exercices concernés
+    for r in range(1, sheet2.nrows):
+        tab_sf.append([])
+        tab_sf[int(sheet2.cell(r,0).value)].append(int(sheet2.cell(r,1).value))
+    #Trie les savoir_faire et les attache à leur id
+    for r in range(1,sheet3.nrows):
+        tab_sft.append([])
+        tab_sft[int(sheet3.cell(r,0).value)].append(sheet3.cell(r,2).value)
+        tab_sft2.append([])
+        tab_sft2[int(sheet3.cell(r,0).value)].append(sheet3.cell(r,1).value)
+    #Associe les themes a leur id
+    for r in range(1,sheet0.nrows):
+        tab_t.append([])
+        tab_t[int(sheet0.cell(r,1).value)].append(sheet0.cell(r,0).value)
+    #Remplissage de la db
+    for r in range(1,sheet1.nrows):
+        theme = int(sheet1.cell(r,1).value)
+        for j in range(0,len(tab_sf[r])):
+            value=tab_sf[r][j]
+            cursor.execute("INSERT INTO mdl_exos_recommendation (num_exo, id_savoir_faire, cours_id, id_theme) VALUES (%s,%s,%s,%s)", \
+                       (r,value,cours_id,theme)) 
+    for r in range(1,sheet0.nrows):
+        for j in range(0,len(tab_t[r])):
+            cursor.execute("INSERT INTO mdl_theme_recommendation (id_theme, theme, cours_id) VALUES (%s,%s,%s)",(r,tab_t[r][j].lower(),lti.user_id[0]))
+    cursor.close()
+    database.commit()
+    database.close()
+    database = MySQLdb.connect(host="127.0.0.1",port=3306,user="root",passwd="",db="moodle")
+    cursor = database.cursor() 
+    for r in range(1,sheet3.nrows):
+       cursor.execute("SELECT DISTINCT id_theme FROM mdl_theme_recommendation WHERE theme=%s",tab_sft2[r][0])
+       id_theme=cursor.fetchall()
+       if not id_theme==():
+           cursor.execute("INSERT INTO mdl_comp_recommendation (id_savoir_faire, savoir_faire, id_theme, cours_id) VALUES (%s,%s,%s,%s)",(r,tab_sft[r][0].lower(),id_theme[0][0],lti.user_id[0]))
+
+    # Close the cursor
+    cursor.close()
+
+    # Commit the transaction
+    database.commit()
+
+    # Close the database connection
+    database.close()
+    return render_template("upload_reussit2.html")
 
 @app.route('/up_latex', methods=['GET','POST'])
 @lti(request='session', error=error, role='staff', app=app)
@@ -337,22 +437,23 @@ def teachers_class(lti=lti):
 			
 	return render_template('displayStuds2.html', results=results, coursename=coursename)
  
-@app.route('/gen/<algo>',methods=['GET','POST'])
+@app.route('/gen',methods=['GET','POST'])
 @lti(request='session', error=error,role = 'staff', app=app)
-def gen(algo,lti=lti):
+def gen(lti=lti):
     database = MySQLdb.connect(host="127.0.0.1",port=3306,user="root",passwd="",db="moodle")
     c = database.cursor()
     cours_id=lti.user_id[0]
     c.execute('SELECT DISTINCT id_savoir_faire,savoir_faire FROM mdl_comp_recommendation WHERE cours_id=%s',cours_id)
     sf=c.fetchall()
-    return render_template("gen.html",sf=sf,algo=algo)
+    return render_template("gen.html",sf=sf)
 
-@app.route('/gen_exo/<algo>',methods=['GET','POST'])
+@app.route('/gen_exo',methods=['GET','POST'])
 @lti(request='session', error=error,role = 'staff', app=app)
-def gen_exo(algo,lti=lti):
+def gen_exo(lti=lti):
     database = MySQLdb.connect(host="127.0.0.1",port=3306,user="root",passwd="",db="moodle")
     cHandler = database.cursor()
     res=get_eleves(lti)
+    cours_id=lti.user_id[0]
     comp=request.form.getlist('comp')
     date=datetime.today().strftime('%Y-%m-%d')
 #    cHandler.execute('SELECT * FROM mdl_exos_eleves_recommendation WHERE date_created>sysdate-6 AND cours_id=%s',cours_id)
@@ -421,7 +522,7 @@ def val_exos(lti=lti):
         for items in results:
             resultats.append(get_exo(str(items)))
         return render_template('exos_val.html',resultats=resultats, num_resultats=results, nom=nom[0], id_stud=id_stud)
-    return url_for('checkexo')
+    return redirect(url_for('checkexo'))
 
 @app.route('/send_exo',methods=['GET','POST'])
 @lti(request='session', error=error,role = 'staff', app=app)
@@ -446,7 +547,7 @@ def send_exo(lti=lti):
         database.close()    
         return render_template('exosok.html')
     else:
-        return url_for('checkexo')
+        return redirect(url_for('checkexo'))
         
 @app.route('/get_my_exos',methods=['GET','POST'])
 @lti(request='session', error=error, app=app)
@@ -499,26 +600,38 @@ def corr_exo(lti=lti):
 @app.route('/corr_exo_eff',methods=['GET','POST'])
 @lti(request='session', error=error, app=app)
 def corr_exo_eff(lti=lti):
-    res=get_eleves(lti)
     if request.method=='POST':
         acquis=request.form.getlist("exo")
         exos=request.form.get('id_exos')
         id_stud=request.form.get('id_stud')
-    j=0
     tab_stud={}
-    for i in exos:
+    exos=str(exos)
+    exoss=[int(s) for s in exos.split() if s.isdigit()]
+    exos=exos.replace('(','')
+    exos=exos.replace(')','')
+    exos=exos.replace(",","")
+    exos=exos.replace('L','')
+    exoss=[int(s) for s in exos.split() if s.isdigit()]
+    j=0
+    for i in exoss:
         if acquis[j]=='Acquis':
             tab_stud[i]=1
         if acquis[j]=='Non acquis':
             tab_stud[i]=0
-        else:
+        if acquis[j]=="En cours d'acquisition":
             tab_stud[i]=0.5
-    with open('data.json') as data_file:    
+        j+=1
+    with open('data.json','r') as data_file:
         data = json.load(data_file)
     for studs in data['eleves']:
         if studs['id']==int(id_stud):
-            studs['res'].append(tab_stud)
-    return render_template('testexo.html',ac=acquis)
+            studs['res'].update(tab_stud)
+            algo.etudiants[int(id_stud)].majResultat(tab_stud)
+    results=json.dumps(data,indent=4)
+    with open('data.json','w') as data_file:
+        data_file.write(results)
+    algo.actualiserNiveaux(int(id_stud))
+    return render_template('testexo.html')
 
 def set_debugging():    
     """ Debuggage du logging
@@ -529,7 +642,6 @@ def set_debugging():
 
     root = logging.getLogger()
     root.setLevel(logging.DEBUG)
-
     ch = logging.StreamHandler(sys.stdout)
     ch.setLevel(logging.DEBUG)
     formatter = logging.Formatter('%(name)s - %(message)s')

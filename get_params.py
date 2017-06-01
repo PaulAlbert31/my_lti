@@ -22,8 +22,7 @@ def get_params(lti):
 	AND (ue.timeend = 0 OR ue.timeend > NOW()) AND ue.status = 0 AND courseid = %s ORDER BY lastname", courseid)
     res = cHandler.fetchall()
     for i in range(0,len(res)):
-        id=res[i][0]
-        d = { 'nom': res[i][1], 'id': id, 'prenom':res[i][3], 'comp':{},'res':{} }
+        d = { 'nom': res[i][1], 'id': res[i][0], 'prenom':res[i][2], 'comp':{},'res':{} }
         results['eleves'].append(d)
     results=json.dumps(results, indent=4)
     with open('data.json', 'w') as f:

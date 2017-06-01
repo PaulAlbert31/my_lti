@@ -22,4 +22,7 @@ class Etudiant(object):
  
     def getCompetences(self):
         return self.niveauxCompetences
+        
+    def majResultat(self, dict):
+        self.resultats.update(dict)
     
