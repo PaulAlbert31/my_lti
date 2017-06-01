@@ -18,9 +18,11 @@
 <br>
 <a href="{{ url_for('see_competences') }}">Voir à quelles compétences correspondent un exercice</a>
 <br>
-<a href="{{ url_for('gen') }}">Assigner les exercices de la semaine</a>
+<a href="{{ url_for('gen',algo=algo) }}">Assigner les exercices de la semaine</a>
 <br>
 <a href="{{ url_for('select_stud') }}">Verifier les exercices assignés</a>
+<br>
+<a href="{{ url_for('corr') }}">Corriger les exercices</a>
 
 <h2> Etudiant </h2>
 <a href="{{ url_for('get_my_exos') }}">Imprimer mes exercices</a>

@@ -1,0 +1,450 @@
+﻿\documentclass[11pt,a4paper]{amsart}
+
+
+%% package
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[french]{babel}
+%\usepackage[dvips]{graphicx}
+\usepackage{amsmath, amsthm}
+\usepackage{amsfonts,amssymb, amsbsy}
+\usepackage{multicol} 
+\usepackage{stmaryrd}
+\usepackage{longtable}
+\usepackage{enumerate}
+\usepackage{mathrsfs}
+\usepackage[pdftex]{graphicx}
+
+
+%\usetikzlibrary{arrows}
+
+
+\usepackage{pgf,tikz}
+\usetikzlibrary{arrows}
+
+\usepackage{color}
+\long\def\red#1{\textcolor {red}{#1}}
+\long\def\blue#1{\textcolor {blue}{#1}}
+
+
+\theoremstyle{theorem}
+\newtheorem{thm}{Th\'eor\`eme}
+\newtheorem{lemmme}[thm]{Lemme}
+
+\newtheorem{theoreme}[thm]{Th\'eor\`eme}
+\newtheorem*{theorem*}{Th\'eor\`eme}
+\newtheorem{proposition}[thm]{Proposition}
+
+
+\theoremstyle{definition}
+\newtheorem{definition}[thm]{D\'efinition}
+\newtheorem{remarque}[thm]{Remarque}
+\newtheorem{exemple}[thm]{Exemple}
+\newtheorem{corollaire}[thm]{Corollaire}
+\newtheorem*{attention}{Mise en garde}
+
+\newtheorem{notation}[thm]{Notation}
+
+
+\newcommand{\coeur}{$\heartsuit$}
+\newcommand{\ccoeur}{$\heartsuit\heartsuit$}
+\newcommand{\trefle}{$\clubsuit$}
+\newcommand{\ttrefle}{$\clubsuit\clubsuit$}
+
+\newenvironment{preuve}{\smallskip\noindent\emph{\textbf{Preuve.}}\hspace{1pt}}%
+ {\hspace{-5pt}{\nobreak\quad\nobreak\hfill\nobreak$\square$\vspace{8pt}%
+ \par}\smallskip\goodbreak}
+%% macro
+
+
+\DeclareMathOperator{\dimension}{dim}
+\DeclareMathOperator{\kernel}{ker}
+\DeclareMathOperator{\image}{image}
+
+
+
+
+
+
+
+
+
+
+\def\norm#1{\Vert #1 \Vert }
+\def\scal#1{\langle #1\rangle}
+
+
+
+
+
+\def\siecle#1{\textsc{\romannumeral #1}\textsuperscript{e}~si�cle}
+\newcommand{\eps}{\varepsilon}
+
+\newcommand{\module}[1]{\vert #1 \vert}
+%\frenchbsetup{StandardItemLabels}
+
+\renewcommand{\Re}{\mathrm{Re}}
+\renewcommand{\Im}{\mathrm{Im}}
+
+
+
+\newcommand{\dd}{d}
+
+\def\NN{{\mathbb N}}
+\def\ZZ{{\mathbb Z}}
+\def\RR{{\mathbb R}}
+\def\CC{{\mathbb C}}
+\def\QQ{{\mathbb Q}}
+
+\def\PP{{\mathbb P}}
+\def\EE{{\mathbb E}}
+%\def\S{{\mathbb S}}
+%\def\O{{\mathbb O}}
+%\def\F{{\mathbb F}}
+%\def\K{{\mathbb K}}
+%\def\M{{\mathcal M}}
+%\def\S{{\mathfrak{S}}}
+%\def\A{{\mathfrak{A}}}
+%\def\U{{\mathbb{U}}}
+%\def\ZN{{$\Z/n\Z$}\xspace}
+%\def\eps{\varepsilon}
+%\def\codim{\mathrm{codim}}
+\def\card{\mathrm{Card}}
+%\def\rg{\mathrm{rg}}
+%\newcommand{\cqfd}{\hfill $\square$ \medskip}
+%\newcommand{\re}{\Re\mathrm{e}}
+%\newcommand{\im}{\mathrm{Im}}
+%\newcommand{\ch}{\mathrm{ch}}
+%\newcommand{\sh}{\mathrm{sh}}
+%\newcommand{\tth}{\mathrm{th}}
+%\newcommand{\tq}{~/~}
+
+
+
+%%compteurs
+%\setlength{\parindent}{0pt}
+\newcounter{numExercice}
+\newcounter{NumPartie}
+\newcounter{qcounter}
+\newcounter{qscounter}
+\setcounter{numExercice}{0}
+\setcounter{NumPartie}{0}
+\setcounter{qcounter}{0}
+\setcounter{qscounter}{0}
+
+
+
+%%Exercices, problemes, questions
+\newcommand{\questiondecours}[1]{\setcounter{qcounter}{0}\vspace{.5cm}\hangindent0em\hangafter=0%
+\noindent\textbf{Question de cours.}~}
+
+\newcommand{\exercicesansnumero}[1]{\setcounter{qcounter}{0}\vspace{.5cm}\hangindent0em\hangafter=0%
+\noindent\textbf{Exercice.}~}
+
+\newcommand{\exo}[2]{\vspace{.3cm}\hangindent0em\hangafter=0%
+\noindent{\textbf{Exercice(#2).} \textit{#1}}}
+
+
+\newcommand{\exosd}[1]{\vspace{.3cm}\hangindent0em\hangafter=0%
+\noindent{\textbf{Exercice .} \textit{#1}}}
+
+\newcommand{\pb}[1]{\vspace{.6cm}
+\noindent\textbf{Probl�me  .}
+{\textit{{#1}}}
+}
+
+\newcommand{\partie}[1]{
+\stepcounter{NumPartie}\setcounter{qcounter}{0}
+\vspace{.3cm}
+\begin{center}
+\textbf{Partie \Roman{NumPartie}. #1}
+\end{center}
+}
+
+
+%\newcommand{\solution}[1]{\ifx\withsolution\undefined\else{\bigskip \noindent\it {\bf Solution~: }#1\cqfd}\fi}
+
+%\newcommand{\exercice}[1]{\subsection{#1}\setcounter{qcounter}{0}}
+
+\newenvironment{question}
+{
+  \stepcounter{qcounter}
+  \setcounter{qscounter}{0}
+  \vspace{.3cm}
+  \hangindent1em
+  \hangafter=0
+  {\noindent(\arabic{qcounter}) }
+}%
+{
+}
+
+\newenvironment{squestion}
+{%
+  \stepcounter{qscounter}%
+  \hangindent3em%
+  \hangafter=0%
+  \vspace{.1cm}
+  {\noindent(\alph{qscounter})}
+}%
+
+
+
+\renewcommand{\d}[1]{\mathinner{\mathrm{d}{#1}}}
+
+\newcommand{\modulo}[1]{\vert #1\vert}
+\DeclareMathOperator{\id}{id}
+
+\begin{document}
+\everymath{\displaystyle}\textbf{Exercice 6}
+
+
+\question On a vu dans un exercice que la fonction $g:x\mapsto \sin(2x)-2x$ était strictement décroissante sur $\RR^+$. En déduire que l'on a $\sin(2x)<2x$ pour tout $x>0$.
+
+
+\question Faire l'étude complète de la fonction $f:x\mapsto \cos(2x)+2x^2$
+
+\textit{(Penser à utiliser la question 1) pour étudier le sens de variation !)}
+
+\question Démontrer que pour tout $x\in \RR$ on a $\cos(2x)\geq 1-2x^2$.
+
+
+% ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+\setcounter{qcounter}{0} \setcounter{qscounter}{0}\textbf{Exercice 53}
+
+Soit $f$ la fontion définie par $$f(x)=\frac12\ln(\frac{1+x}{1-x})$$
+
+\question Donner le domaine de définition $D_f$ de $f$. La fonction $f$ est-elle paire, impaire, ou aucun des deux ?
+
+\question
+
+\squestion Expliquer pourquoi on a $f(x)=\frac{1}{2}(\ln(1+x)-\ln(1-x))$ (et en particulier vérifier que cette expression est bien définie pour $x\in D_f$..
+
+\squestion En déduire que l'on a $$f'(x)=\frac{1}{1-x^2}$$
+
+\question Donnez les limites de $f$ au bord du domaine de définition.
+
+\question Faites le tableau de variation de $f$ et tracez son graphe.
+
+
+
+\question En utilisant les questions précédentes, résoudre sur $]-1,1[$ l'équation $(1-x^2)y'-y=0$
+
+\question Bonus : quelles sont les solutions de l'équation $(1-x^2)y'-y=0$ sur $]1,+\infty[$ et sur $]-\infty,-1[$ ?
+
+\question On pose $y_0(x)=\frac{1+x}{\sqrt{1-x}}$
+
+ \squestion Calculer la dérivée de $y_0$.
+ 
+\squestion Démontrer que $y_0$ est une solution de l'équation 
+$$y'-\frac{1}{1-x^2} y=\frac{1}{2\sqrt{1-x}}$$
+
+\squestion En déduire toutes les solutions sur $]-1,1[$ de l'équation $$y'-\frac{1}{1-x^2} y=\frac{1}{2\sqrt{1-x}}$$
+
+\setcounter{qcounter}{0} \setcounter{qscounter}{0}\textbf{Exercice 45}\exosd{5min}
+
+Soit $f$ une fonction. 
+
+\question Quelle propriété de $f$ peut s'écrire avec la phrase suivante :
+
+$$\forall A>0\;\exists \eta>0\forall x\; |x-2|<\eta\Rightarrow f(x)>A$$
+
+\question Faire la négation de la phrase ci-dessus.
+
+\setcounter{qcounter}{0} \setcounter{qscounter}{0}\textbf{Exercice 78}{\ccoeur}
+Placer dans le plan les points dont les affixes sont :
+\begin{enumerate}
+\begin{multicols}{2}
+\item $2i$
+\item $-1$
+\item $1+i$
+\item $2+3i$
+\item $3-5i$
+\item $\sqrt{3}/2+i/2$
+\item $\cos(\pi/2)+i\sin(\pi/2)$
+\item $i(i+1)$
+\end{multicols}
+\end{enumerate}
+
+\setcounter{qcounter}{0} \setcounter{qscounter}{0}\textbf{Exercice 96}{\coeur} Déterminer la limite de $f$ en $-\infty$ et en $+\infty$ dans chacun des cas suivants : 
+
+\begin{multicols}{2}
+\begin{enumerate}
+\item $f(x)=e^{2x}-e^x$,
+\item $f(x)=\frac{e^{2x}-1}{e^x+1}$,
+%\item $f(x)=x(\sqrt{e^{2x}+1}-e^x)$,
+\item $f(x)=e^{x^2}-e^{x+1}$.
+\end{enumerate}
+\end{multicols}
+
+\setcounter{qcounter}{0} \setcounter{qscounter}{0}\textbf{Exercice 152}{\trefle}
+Calculez dans chaque cas une primitive des fonctions définies par les formules suivantes. Vous  aurez parfois besoin d'une intégration par parties, parfois pas.
+
+\begin{multicols}{2}
+\begin{enumerate}[a)]
+\item $x\cos(x)$ (dériver $x$ et intégrer $\cos$)
+\item $x^2\sin(x)$ (se ramener à l'exemple précédent)
+\item $x^2e^x$ (se ramener à $xe^x$)
+\item $\sin(5x)-2\cos(3x)+4\sin(2x)$ 
+\item $\frac{x}{e^x}$
+\item $\frac{x}{(x^2-4)^2}$
+\item $(2x+1)e^x$,
+\item $\sin(x)\cos(x)^3$
+\item $x\ln(x)$
+\item $x^2\ln(x)$
+\item $\cos(x)^2$
+\end{enumerate}
+\end{multicols}
+
+\section{Equations différentielles}
+
+\setcounter{qcounter}{0} \setcounter{qscounter}{0}\textbf{Exercice 5}
+
+\question 
+Faire l'étude complète de la fonction $x\mapsto \cos(2x)-x$.
+
+
+\question 
+Faire l'étude complète de la fonction $x\mapsto \cos(2x)+2x^2$. 
+
+\textit{On pourra utiliser le fait (démontré dans un exercice posé en classe) que pour tout $x>0$ on a $\sin(2x)<2x$}
+
+\question En déduire que pour tout $x\in\RR$ on a $\cos(2x)<1-2x^2$
+
+% ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+\setcounter{qcounter}{0} \setcounter{qscounter}{0}\textbf{Exercice 156}\begin{exo}{}{}
+Calculez les dérivées des fonctions $f$ définies par:
+
+
+\begin{enumerate}[(a)]
+\item $  f(x)=\frac{e^x \ln(x) }{x^2+2x^3}$,%$f'(x) = \frac{e^x ((2 x^2-5 x-2) \ln(x)+2 x+1)}{x^3 (2 x+1)^2}$
+\item $ f(x)= 3^x \sin x $,% $f'(x)=3^x (\cos(x)+\ln(3) \sin(x))$
+\item $ f(x)= \frac{x\ln x}{x^2-1}$, %$f'(x)= \frac{x^2-(x^2+1) \ln(x)-1}{x^2-1}^2$.
+\item $f(x)=\frac{4\cos^2(x)-3}{2\cos(x)}$, %$f'(x) = -2 \sin(x)- \frac{3}{2} \frac{\sin(x)}{\cos(x)^2}$
+\item $f(x)=(x^4-x^2+5)^4$, %$f'(x) = 8 x (2 x^2-1) (x^4-x^2+5)^3$
+\item $f(x)=\frac{1}{\sqrt{x-3}}$, %$f'(x) = -\frac{1}{2 (x-3)^{3/2}}$
+\item $f(x)=(\ln(x))^3$,% $f'(x) = 3 \frac{\ln^2(x)}{x} $
+\item $f(x)=(x^2+x+1)e^x$, %$f'(x) = e^x (x^2+3 x+2) $
+\item $f(x)=\frac{-3x^2+4x-1}{x^2+2x+5}$, %$f'(x) = -2 \frac{5 x^2+14 x-11)}{x^2+2 x+5}^2$
+\item $f(x)=(1-x)\sqrt{x+1}$, %$f'(x) = \frac{-3 x-1}{2 \sqrt{x+1}} $
+\item $f(x)=\ln(\frac{2x-1}{x-3})$,% $f'(x) = -\frac{5}{2 x^2-7 x+3}$
+\item $f(x)=\sqrt{(\ln(x))^2 +1}$,% $f'(x) = \frac{\ln(x)}{x \sqrt{\ln^2(x)+1}}$
+\item $f(x)=\ln(e^{2x}-1)$, %$f'(x) = \frac{(2 e^{2 x}}{e^{2 x}-1} $
+\item $f(x)=\ln(x+\sqrt{x^2+1})$, %$f'(x) = \frac{1}{\sqrt{x^2+1}}$
+\item $f(x)=x\sqrt{\frac{x-1}{x+1}}$
+\end{enumerate}
+\end{exo}
+
+
+\section{Complexes}
+
+\setcounter{qcounter}{0} \setcounter{qscounter}{0}\textbf{Exercice 211}{\ccoeur}
+
+Donner un équivalent simple au voisinage du point demandé :
+
+\begin{enumerate}[a)]
+\begin{multicols}{2}
+\item en $0$, $\exp(\sqrt{1+x})$
+\item en $+\infty$, $\frac{5x^3+3\ln(x)+2x}{4x^4+3x^2+1}$
+\item en $0$,  $\frac{5x^3+3\ln(x)+2x}{4x^4+3x^2+1}$
+\item en $1$, $\ln(x)$
+\item en $+\infty$, $\ln(x+1)-\ln(x)$
+\end{multicols}
+\end{enumerate}
+
+
+\setcounter{qcounter}{0} \setcounter{qscounter}{0}\textbf{Exercice 117}{\coeur}
+
+\question Ecrivez (sans tricher !) les symboles de l'alphabet grec sur votre feuille : dans l'ordre,
+
+{alpha},{bêta},{gamma},{delta},{epsilon},{zêta},{êta},{thêta},
+{iota},kappa,
+
+lambda,mu,nu,xi,omicron,pi,rhô,sigma,tau,upsilon,phi,khi,
+psi,
+oméga
+
+\question Cachez l'énoncé, et lisez ce que vous avez écrit sur votre feuille.
+
+
+\setcounter{qcounter}{0} \setcounter{qscounter}{0}\textbf{Exercice 70}{\coeur}
+
+Soit $f$ une fonction définie sur $\RR$. Que signifient les assertions suivantes ? Dans chaque cas, donner un exemple de fonction vérifiant la propriété, et un exemple ne la vérifiant pas.
+
+\begin{enumerate}
+\item $\forall A>0\; \exists B>0 \;\forall x>B\quad f(x)>A$
+\item $\forall \eps>0\; \exists A>0\;\forall x>A\quad |f(x)|<\eps$.
+\item $\forall \eps>0\;\exists A>0\;\forall x>A\quad |f(x)-1|<\eps$.
+\item $\exists l \in \RR \; \forall \eps>0\;\exists A>0\;\forall x>A\quad |f(x)-l|<\eps$.
+\item $\forall \eps>0 \; \exists \eta >0 \; \forall x\in\RR \; \quad |x|<\eta \Rightarrow |f(x)-1|<\eps$.
+\item $\forall \eps >0 \; \exists \eta \in \RR, \forall x \in \RR, |x-1|<\eta \Rightarrow |f(x)- 2|< \eps$.
+\item Soit $ x_0 \in \RR. \forall \eps >0 \; \exists \eta \in \RR, \forall x \in \RR, |x-x_0|<\eta \Rightarrow |f(x)-f(x_0)|< \eps$.
+\item $\forall x_0 \in \RR \; \forall \eps >0 \; \exists \eta \in \RR, \forall x \in \RR, |x-x_0|<\eta \Rightarrow |f(x)-f(x_0)|< \eps$.
+\end{enumerate}
+
+
+\setcounter{qcounter}{0} \setcounter{qscounter}{0}\textbf{Exercice 67}{\coeur}
+
+On considère la phrase "Pour tout nombre réel $x$, il existe un entier naturel $N$ tel que $N>x$.
+
+\question Traduire cette phrase à l'aide de quantificateurs.
+
+\question \'Ecrire sa négation en français et avec des quantificateurs.
+
+
+\setcounter{qcounter}{0} \setcounter{qscounter}{0}\textbf{Exercice 65}{\trefle}
+Soit $f:\RR\to\RR$ une fonction. Voici plusieurs propriétés possibles de la fonction $f$. Quelles sont, en langage courant, leur signification ? Dans chaque cas, pouvez-vous trouver une fonction $f$ qui vérifie cette propriété ? Et une autre qui ne la vérifie pas ?
+
+\begin{enumerate}[(i)]
+\item $\forall x\in \RR\; \exists y\in \RR \;\; f(x)<f(y)$
+\item $\forall x\in \RR \; \exists T\in \RR \;\; f(x)=f(x+T)$
+\item $\forall x\in \RR \;\exists T\in \RR^* \;\; f(x)=f(x+T)$
+\item $\forall x\in \RR \; \exists y\in \RR \;\; f(x)=y$
+\item $\exists x\in \RR \; \forall y\in \RR\;\; f(x)=y$
+\end{enumerate}
+
+\setcounter{qcounter}{0} \setcounter{qscounter}{0}\textbf{Exercice 64}{\coeur}
+
+Soit $f:\RR\to\RR$ une fonction. 
+
+\question Exprimer à l'aide de quantificateurs les assertions suivantes :
+
+\begin{enumerate}[(i)]
+\item $f$ est croissante
+\item $f$ est impaire
+\item $f$ est constante
+\item $f$ est périodique de période $2\pi$
+\item $f$ n'est ni croissante ni décroissante
+\item $f$ est injective
+\item $f$ est surjective
+\end{enumerate}
+
+\question \'Ecrire leur négation.
+
+
+
+
+\setcounter{qcounter}{0} \setcounter{qscounter}{0}\textbf{Exercice 57}{\coeur}
+
+Dire si les propositions suivantes sont
+vraies ou fausses, et les nier.
+
+\begin{enumerate}
+\item Pour tout réel $x$, si $x\geq 3$ alors $x^2\geq 5$.
+\item Pour tout entier naturel $n$, si $n>1$ alors $n\geq 2$.
+\item Pour tout réel $x$, si $x>1$ alors $x\geq 2$.
+\item Pour tout réel $x$,  $x^2\geq 1$ est équivalent à $x\leq 1$.
+\end{enumerate}
+
+\setcounter{qcounter}{0} \setcounter{qscounter}{0}\textbf{Exercice 55}{\coeur}
+
+Soit $x\in\RR$. Nier les propositions suivantes :
+
+\begin{enumerate}[a)]
+\item $0\leq x\leq 1$
+\item $x=0$ ou $(x\geq 0$ et $x^2=1$)
+\item $\forall y\in\RR$, $xy\neq 0$ ou $x=0$ ou $y=0$.
+\end{enumerate}
+
+Dans chaque cas, sont-elles vraies ou fausses ?
+
+\setcounter{qcounter}{0} \setcounter{qscounter}{0}\end{document}

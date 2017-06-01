@@ -7,6 +7,7 @@ from pylti.flask import lti
 import MySQLdb
 from get_params import get_params
 import xlrd
+import json
 from get_exo import get_exo, get_exo_2
 from get_eleves import get_eleves
 from datetime import datetime
@@ -55,7 +56,47 @@ def index(lti=lti):
     :param lti: the `lti` object from `pylti`
     :return: index page for lti provider
     """
-    return render_template('index.html', lti=lti)
+    database = MySQLdb.connect(host="127.0.0.1",port=3306,user="root",passwd="",db="moodle")
+    cHandler = database.cursor() 
+    cHandler.execute("SHOW TABLES LIKE 'mdl_comp_recommendation'")
+    condition=cHandler.fetchall()
+    if condition==():
+        return url_for('upload_exo')
+    if not os.path.isfile('data.json'):
+        get_params(lti)
+    algo=main.Main()
+    cours_id=lti.user_id[0]
+    cHandler.execute("SELECT id_theme,theme FROM mdl_theme_recommendation WHERE cours_id=%s",cours_id)
+    themes=cHandler.fetchall()
+    for items in themes:
+        algo.ajouterTheme(int(items[0]),items[1])
+    cHandler.execute("SELECT id_savoir_faire, savoir_faire FROM mdl_comp_recommendation WHERE cours_id=%s",cours_id)
+    comp=cHandler.fetchall()
+    for items in comp:
+        cHandler.execute("SELECT id_theme FROM mdl_comp_recommendation WHERE id_savoir_faire=%s",items[0])
+        id_theme=cHandler.fetchall()
+        if not id_theme==():
+            algo.ajouterCompetence(int(items[0]),items[1],id_theme[0][0],[])
+    with open('data.json') as data_file:    
+        data = json.load(data_file)
+    for studs in data:
+        algo.ajouterEtudiant(studs['id'], studs['prenom'], studs['nom'], studs['comp'], {})
+    i=0
+    while not get_exo(i)=="" or i<256:
+        text=get_exo(i)
+        cHandler.execute("SELECT DISTINCT id_theme FROM mdl_exos_recommendation WHERE num_exo=%s",i)
+        id_theme=cHandler.fetchall()
+        cHandler.execute("SELECT DISTINCT m1.id_savoir_faire FROM mdl_exos_recommendation m1 JOIN mdl_comp_recommendation m2 ON m1.id_savoir_faire=m2.id_savoir_faire WHERE m1.num_exo=%s",i)
+        id_comp=cHandler.fetchall()
+        tab_id_theme=[]
+        tab_id_comp=[]
+        for ids in id_theme:
+            tab_id_theme.append(int(ids[0]))
+        for ids in id_comp:
+            tab_id_comp.append(int(ids[0]))
+        algo.ajouterExercice(i,text,"",tab_id_theme,tab_id_comp,{}, 1)
+        i+=1
+    return render_template('index.html', lti=lti,algo=algo)
 
 @app.route('/index2', methods=['GET', 'POST'])
 @lti(request='session', error=error, app=app)
@@ -296,53 +337,22 @@ def teachers_class(lti=lti):
 			
 	return render_template('displayStuds2.html', results=results, coursename=coursename)
  
-@app.route('/gen',methods=['GET','POST'])
+@app.route('/gen/<algo>',methods=['GET','POST'])
 @lti(request='session', error=error,role = 'staff', app=app)
-def gen(lti=lti):
+def gen(algo,lti=lti):
     database = MySQLdb.connect(host="127.0.0.1",port=3306,user="root",passwd="",db="moodle")
     c = database.cursor()
     cours_id=lti.user_id[0]
     c.execute('SELECT DISTINCT id_savoir_faire,savoir_faire FROM mdl_comp_recommendation WHERE cours_id=%s',cours_id)
     sf=c.fetchall()
-    return render_template("gen.html",sf=sf)
+    return render_template("gen.html",sf=sf,algo=algo)
 
-@app.route('/gen_exo',methods=['GET','POST'])
+@app.route('/gen_exo/<algo>',methods=['GET','POST'])
 @lti(request='session', error=error,role = 'staff', app=app)
-def gen_exo(lti=lti):
-    res=get_eleves(lti)
-    algo=main.Main()
+def gen_exo(algo,lti=lti):
     database = MySQLdb.connect(host="127.0.0.1",port=3306,user="root",passwd="",db="moodle")
     cHandler = database.cursor()
-    cours_id=lti.user_id[0]
-    cHandler.execute("SELECT id_theme,theme FROM mdl_theme_recommendation WHERE cours_id=%s",cours_id)
-    themes=cHandler.fetchall()
-    for items in themes:
-        algo.ajouterTheme(int(items[0]),items[1])
-    cHandler.execute("SELECT id_savoir_faire, savoir_faire FROM mdl_comp_recommendation WHERE cours_id=%s",cours_id)
-    comp=cHandler.fetchall()
-    for items in comp:
-        cHandler.execute("SELECT id_theme FROM mdl_comp_recommendation WHERE id_savoir_faire=%s",items[0])
-        id_theme=cHandler.fetchall()
-        if not id_theme==():
-            algo.ajouterCompetence(int(items[0]),items[1],id_theme[0][0],[])
-    for eleve in res:
-        algo.ajouterEtudiant(eleve[0], eleve[2], eleve[1], {}, {})
-    i=0
-    while not get_exo(i)=="" or i<256:
-        text=get_exo(i)
-        cHandler.execute("SELECT DISTINCT id_theme FROM mdl_exos_recommendation WHERE num_exo=%s",i)
-        id_theme=cHandler.fetchall()
-        cHandler.execute("SELECT DISTINCT m1.id_savoir_faire FROM mdl_exos_recommendation m1 JOIN mdl_comp_recommendation m2 ON m1.id_savoir_faire=m2.id_savoir_faire WHERE m1.num_exo=%s",i)
-        id_comp=cHandler.fetchall()
-        tab_id_theme=[]
-        tab_id_comp=[]
-        for ids in id_theme:
-            tab_id_theme.append(int(ids[0]))
-        for ids in id_comp:
-#            if not int(ids[0])==176:
-            tab_id_comp.append(int(ids[0]))
-        algo.ajouterExercice(i,text,"",tab_id_theme,tab_id_comp,{}, 1)
-        i+=1
+    res=get_eleves(lti)
     comp=request.form.getlist('comp')
     date=datetime.today().strftime('%Y-%m-%d')
 #    cHandler.execute('SELECT * FROM mdl_exos_eleves_recommendation WHERE date_created>sysdate-6 AND cours_id=%s',cours_id)
@@ -455,13 +465,61 @@ def get_my_exos(lti=lti):
     f.close()
     for stuff in results:
         string+=stuff
-    string+='//end{document}'
-    f=open('attribution\%s.tex' % id_stud,'w')
+    string+='\\end{document}'
+    f=open('static\pdf\%s.tex' % id_stud,'w')
     f.write(string)
     f.close()
-    os.system('pdflatex %s.tex' % id_stud)
+    os.system('pdflatex static/pdf/%s.tex' % id_stud)
     return render_template('get_my_exos.html',num_resultats=exos,nom=nom[0],idstud=id_stud)
-        
+
+@app.route('/corr',methods=['GET','POST'])
+@lti(request='session', error=error, app=app)
+def corr(lti=lti):
+    studs=get_eleves(lti)
+    id_stud=[]
+    for items in studs:
+        id_stud.append(items[0])
+    return render_template('corr.html',studs=studs)
+
+@app.route('/corr_exo',methods=['GET','POST'])
+@lti(request='session', error=error, app=app)
+def corr_exo(lti=lti):
+    if request.method=='POST':
+        text=request.form.get('nom')
+        debutit=text.find('"')
+        finit=text.find('"',debutit+1)
+        id_stud=int(text[debutit+1:finit])
+        database = MySQLdb.connect(host="127.0.0.1",port=3306,user="root",passwd="",db="moodle")
+        cHandler = database.cursor()
+        cHandler.execute('SELECT DISTINCT id_exo FROM mdl_exos_eleves_recommendation WHERE id_stud=%s',id_stud)
+        exos=cHandler.fetchall()
+        nom=get_name(id_stud)
+        return render_template('corr_exo.html',exos=exos,nom=nom,id_stud=id_stud)
+
+@app.route('/corr_exo_eff',methods=['GET','POST'])
+@lti(request='session', error=error, app=app)
+def corr_exo_eff(lti=lti):
+    res=get_eleves(lti)
+    if request.method=='POST':
+        acquis=request.form.getlist("exo")
+        exos=request.form.get('id_exos')
+        id_stud=request.form.get('id_stud')
+    j=0
+    tab_stud={}
+    for i in exos:
+        if acquis[j]=='Acquis':
+            tab_stud[i]=1
+        if acquis[j]=='Non acquis':
+            tab_stud[i]=0
+        else:
+            tab_stud[i]=0.5
+    with open('data.json') as data_file:    
+        data = json.load(data_file)
+    for studs in data['eleves']:
+        if studs['id']==int(id_stud):
+            studs['res'].append(tab_stud)
+    return render_template('testexo.html',ac=acquis)
+
 def set_debugging():    
     """ Debuggage du logging
 

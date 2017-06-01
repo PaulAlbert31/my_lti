@@ -1,6 +1,6 @@
 <h1>Quelles compétences favoriser cette semaine ?</h1>
 <body>
-<form action="{{url_for('gen_exo')}}" method=post >
+<form action="{{url_for('gen_exo',algo=algo)}}" method=post >
 	<input type=submit value="Valider les competences">	
 	<br>
   {%for items in sf%}

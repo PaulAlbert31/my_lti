@@ -120,5 +120,5 @@ def get_exo_2(num_exo):
     if pos_fin1==-1:
         return data[:-14]
     postexotraite=data[:pos_fin1+10]
-    exotraite="$\\textbf{Exercice "+str(num_exo1)+"}$"+postexotraite.replace('\\exo{}','').replace('\\exosd{}','')
+    exotraite="\\textbf{Exercice "+str(num_exo1)+"}"+postexotraite.replace('\\exo{}','').replace('\\exosd{}','')+'\\setcounter{qcounter}{0} \\setcounter{qscounter}{0}'
     return exotraite
