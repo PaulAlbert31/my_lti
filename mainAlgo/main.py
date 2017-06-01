@@ -56,7 +56,7 @@ class Main(object):
                     matQCourante = [1 if k in exo.competences else 0 for k in self.competences]
                     bnds = [[-10, 10]]*len(self.competences)
                     f = lambda x : -esperanceVraisemblance(resultats, choixExercices+[exo], x,  matriceQ, matQchoisies+[matQCourante], reponses)
-                    opt = scipy.optimize.minimize(f, [0]*len(self.competences), bounds=bnds)
+                    opt = optimize.minimize(f, [0]*len(self.competences), bounds=bnds)
                     progres = sum([opt.x[c.nId]-niveauxPred[c.nId] for c in competences])
                     if progres >= maxProgres:
                         niveauxCourant = opt.x

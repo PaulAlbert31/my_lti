@@ -1,0 +1,198 @@
+\documentclass[11pt,a4paper]{amsart}
+
+
+%% package
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[french]{babel}
+%\usepackage[dvips]{graphicx}
+\usepackage{amsmath, amsthm}
+\usepackage{amsfonts,amssymb, amsbsy}
+\usepackage{multicol} 
+\usepackage{stmaryrd}
+\usepackage{longtable}
+\usepackage{enumerate}
+\usepackage{mathrsfs}
+\usepackage[pdftex]{graphicx}
+
+
+%\usetikzlibrary{arrows}
+
+
+\usepackage{pgf,tikz}
+\usetikzlibrary{arrows}
+
+\usepackage{color}
+\long\def\red#1{\textcolor {red}{#1}}
+\long\def\blue#1{\textcolor {blue}{#1}}
+
+
+\theoremstyle{theorem}
+\newtheorem{thm}{Th\'eor\`eme}
+\newtheorem{lemmme}[thm]{Lemme}
+
+\newtheorem{theoreme}[thm]{Th\'eor\`eme}
+\newtheorem*{theorem*}{Th\'eor\`eme}
+\newtheorem{proposition}[thm]{Proposition}
+
+
+\theoremstyle{definition}
+\newtheorem{definition}[thm]{D\'efinition}
+\newtheorem{remarque}[thm]{Remarque}
+\newtheorem{exemple}[thm]{Exemple}
+\newtheorem{corollaire}[thm]{Corollaire}
+\newtheorem*{attention}{Mise en garde}
+
+\newtheorem{notation}[thm]{Notation}
+
+
+\newcommand{\coeur}{$\heartsuit$}
+\newcommand{\ccoeur}{$\heartsuit\heartsuit$}
+\newcommand{\trefle}{$\clubsuit$}
+\newcommand{\ttrefle}{$\clubsuit\clubsuit$}
+
+\newenvironment{preuve}{\smallskip\noindent\emph{\textbf{Preuve.}}\hspace{1pt}}%
+ {\hspace{-5pt}{\nobreak\quad\nobreak\hfill\nobreak$\square$\vspace{8pt}%
+ \par}\smallskip\goodbreak}
+%% macro
+
+
+\DeclareMathOperator{\dimension}{dim}
+\DeclareMathOperator{\kernel}{ker}
+\DeclareMathOperator{\image}{image}
+
+
+
+
+
+
+
+
+
+
+\def\norm#1{\Vert #1 \Vert }
+\def\scal#1{\langle #1\rangle}
+
+
+
+
+
+\def\siecle#1{\textsc{\romannumeral #1}\textsuperscript{e}~siècle}
+\newcommand{\eps}{\varepsilon}
+
+\newcommand{\module}[1]{\vert #1 \vert}
+%\frenchbsetup{StandardItemLabels}
+
+\renewcommand{\Re}{\mathrm{Re}}
+\renewcommand{\Im}{\mathrm{Im}}
+
+
+
+\newcommand{\dd}{d}
+
+\def\NN{{\mathbb N}}
+\def\ZZ{{\mathbb Z}}
+\def\RR{{\mathbb R}}
+\def\CC{{\mathbb C}}
+\def\QQ{{\mathbb Q}}
+
+\def\PP{{\mathbb P}}
+\def\EE{{\mathbb E}}
+%\def\S{{\mathbb S}}
+%\def\O{{\mathbb O}}
+%\def\F{{\mathbb F}}
+%\def\K{{\mathbb K}}
+%\def\M{{\mathcal M}}
+%\def\S{{\mathfrak{S}}}
+%\def\A{{\mathfrak{A}}}
+%\def\U{{\mathbb{U}}}
+%\def\ZN{{$\Z/n\Z$}\xspace}
+%\def\eps{\varepsilon}
+%\def\codim{\mathrm{codim}}
+\def\card{\mathrm{Card}}
+%\def\rg{\mathrm{rg}}
+%\newcommand{\cqfd}{\hfill $\square$ \medskip}
+%\newcommand{\re}{\Re\mathrm{e}}
+%\newcommand{\im}{\mathrm{Im}}
+%\newcommand{\ch}{\mathrm{ch}}
+%\newcommand{\sh}{\mathrm{sh}}
+%\newcommand{\tth}{\mathrm{th}}
+%\newcommand{\tq}{~/~}
+
+
+
+%%compteurs
+%\setlength{\parindent}{0pt}
+\newcounter{numExercice}
+\newcounter{NumPartie}
+\newcounter{qcounter}
+\newcounter{qscounter}
+\setcounter{numExercice}{0}
+\setcounter{NumPartie}{0}
+\setcounter{qcounter}{0}
+\setcounter{qscounter}{0}
+
+
+
+%%Exercices, problemes, questions
+\newcommand{\questiondecours}[1]{\setcounter{qcounter}{0}\vspace{.5cm}\hangindent0em\hangafter=0%
+\noindent\textbf{Question de cours.}~}
+
+\newcommand{\exercicesansnumero}[1]{\setcounter{qcounter}{0}\vspace{.5cm}\hangindent0em\hangafter=0%
+\noindent\textbf{Exercice.}~}
+
+\newcommand{\exo}[2]{\vspace{.3cm}\hangindent0em\hangafter=0%
+\noindent{\textbf{Exercice(#2).} \textit{#1}}}
+
+
+\newcommand{\exosd}[1]{\vspace{.3cm}\hangindent0em\hangafter=0%
+\noindent{\textbf{Exercice .} \textit{#1}}}
+
+\newcommand{\pb}[1]{\vspace{.6cm}
+\noindent\textbf{Problème  .}
+{\textit{{#1}}}
+}
+
+\newcommand{\partie}[1]{
+\stepcounter{NumPartie}\setcounter{qcounter}{0}
+\vspace{.3cm}
+\begin{center}
+\textbf{Partie \Roman{NumPartie}. #1}
+\end{center}
+}
+
+
+%\newcommand{\solution}[1]{\ifx\withsolution\undefined\else{\bigskip \noindent\it {\bf Solution~: }#1\cqfd}\fi}
+
+%\newcommand{\exercice}[1]{\subsection{#1}\setcounter{qcounter}{0}}
+
+\newenvironment{question}
+{
+  \stepcounter{qcounter}
+  \setcounter{qscounter}{0}
+  \vspace{.3cm}
+  \hangindent1em
+  \hangafter=0
+  {\noindent(\arabic{qcounter}) }
+}%
+{
+}
+
+\newenvironment{squestion}
+{%
+  \stepcounter{qscounter}%
+  \hangindent3em%
+  \hangafter=0%
+  \vspace{.1cm}
+  {\noindent(\alph{qscounter})}
+}%
+
+
+
+\renewcommand{\d}[1]{\mathinner{\mathrm{d}{#1}}}
+
+\newcommand{\modulo}[1]{\vert #1\vert}
+\DeclareMathOperator{\id}{id}
+
+\begin{document}
+\everymath{\displaystyle}

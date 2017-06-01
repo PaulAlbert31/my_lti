@@ -10,14 +10,12 @@
 </script>
 	</head>
     <h1>Voici vos exercices pour la semaine {{nom[0]}} {{nom[1]}}</h1>
-	<h1>Numéro des exos</h1>
+	<h1>Numéro des exercices</h1>
 	{%for num in num_resultats[:-1]%}
 		{{num[0]}} -
 	{%endfor%}
 		{{num_resultats[-1][0]}}
 	<h1>Énoncés</h1>
-	{%for en in resultats%}
-    <p>{{en}}</p>
+	<embed src="{{idstud}}.pdf" width="500" height="375" type='application/pdf'>
 	<br>
-	{%endfor%}
 	<a href="{{ url_for('index2') }}">Retour à l'index</a>

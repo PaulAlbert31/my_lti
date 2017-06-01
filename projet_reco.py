@@ -7,7 +7,7 @@ from pylti.flask import lti
 import MySQLdb
 from get_params import get_params
 import xlrd
-from get_exo import get_exo
+from get_exo import get_exo, get_exo_2
 from get_eleves import get_eleves
 from datetime import datetime
 from get_name import get_name
@@ -354,16 +354,18 @@ def gen_exo(lti=lti):
         for eleves in res:
             id_stud=eleves[0]
             exos=algo.genererFE(id_stud,map(int, comp),8)
-#            for id_exo in exos:
-#                cHandler.execute("INSERT INTO mdl_exos_eleves_recommendation (id_stud, id_exo, cours_id,\
-#                date_created, realised) VALUES (%s,%s,%s,%s,0)",(id_stud,id_exo,cours_id,date))
+            for exo in exos:
+                if exo == None:
+                    return render_template('no_exo.html')
+                cHandler.execute("INSERT INTO mdl_exos_eleves_recommendation (id_stud, id_exo, cours_id,\
+                date_created, realised) VALUES (%s,%s,%s,%s,0)",(id_stud,exo.nId,cours_id,date))
         # Close the cursor
         cHandler.close()
         # Commit the transaction
         database.commit()
         # Close the database connection
         database.close()
-        return render_template('testexo.html',res=exos)
+        return render_template('exosok.html')
     return render_template('not_yet.html')
 
 @app.route('/select_stud',methods=['GET','POST'])
@@ -446,9 +448,19 @@ def get_my_exos(lti=lti):
     exos=cHandler.fetchall()
     results=[]
     for items in exos:
-        results.append(get_exo(items[0]))
+        results.append(get_exo_2(items[0]))
     nom=get_name(id_stud)
-    return render_template('get_my_exos.html',num_resultats=exos,resultats=results,nom=nom[0])
+    f=open('start.tex','r')
+    string=f.read()
+    f.close()
+    for stuff in results:
+        string+=stuff
+    string+='//end{document}'
+    f=open('attribution\%s.tex' % id_stud,'w')
+    f.write(string)
+    f.close()
+    os.system('pdflatex %s.tex' % id_stud)
+    return render_template('get_my_exos.html',num_resultats=exos,nom=nom[0],idstud=id_stud)
         
 def set_debugging():    
     """ Debuggage du logging

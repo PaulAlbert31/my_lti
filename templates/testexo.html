@@ -12,11 +12,8 @@
 	inlineMath: [['$','$'],['\\(','\\)']]
 	}
 	}
-  });
+  );
 </script>
 	<h1>Énoncés</h1>
-	{%for en in res%}
-    <p>{{en.enonce}}</p>
-	<br>
-	{%endfor%}
+	({res}}
 	<a href="{{ url_for('index2') }}">Retour à l'index</a>
