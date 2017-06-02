@@ -80,7 +80,7 @@ def index(lti=lti):
     with open('data.json') as data_file:    
         data = json.load(data_file)
     for studs in data["eleves"]:
-        algo.ajouterEtudiant(studs['id'], studs['prenom'], studs['nom'], studs['comp'], {})
+        algo.ajouterEtudiant(studs['id'], studs['prenom'], studs['nom'], studs['comp'], studs['res'])
     i=0
     while not get_exo(i)=="" or i<256:
         text=get_exo(i)
@@ -626,11 +626,16 @@ def corr_exo_eff(lti=lti):
     for studs in data['eleves']:
         if studs['id']==int(id_stud):
             studs['res'].update(tab_stud)
-            algo.etudiants[int(id_stud)].majResultat(tab_stud)
+            algo.etudiants[int(id_stud)].majResultat(tab_stud)  
+    algo.actualiserNiveaux(int(id_stud))
+    for studs in data['eleves']:
+        if studs['id']==int(id_stud):
+            studs['comp'].update(algo.etudiants[int(id_stud)].niveauxCompetences)
+            studs['res']={}
     results=json.dumps(data,indent=4)
     with open('data.json','w') as data_file:
         data_file.write(results)
-    algo.actualiserNiveaux(int(id_stud))
+    
     return render_template('testexo.html')
 
 def set_debugging():    
