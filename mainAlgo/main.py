@@ -29,9 +29,14 @@ class Main(object):
         bnds = [[-1, 1]]*len(self.competences)
         f = lambda x : -vraisemblance(exercices, x, matriceQ, reponses)
         opt = optimize.minimize(f, [0]*len(self.competences), bounds=bnds)
-        print(opt.x)
-        print(-opt.fun)
-        etudiant.setNiveaux(opt.x)
+#        print(opt.x)
+#        print(-opt.fun)
+        maj={}
+        i=1
+        for items in opt.x:
+            maj[i]=items
+            i+=1
+        etudiant.setNiveaux(maj)
         
         
     
