@@ -1,0 +1,29 @@
+<!--
+  Checkbox Trickery with CSS:
+  http://codersblock.com/blog/checkbox-trickery-with-css/ 
+-->
+<head>
+  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='checkexo.css') }}?t=[timestamp]">
+<script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {inlineMath: [["$","$"],["\\(","\\)"]]}
+  });
+</script>
+</head>
+<h1>Exercices recommandes pour {{namestud[0]}} {{namestud[1]}}</h1>
+<body>
+<form action="{{url_for('val_exos')}}" method=post >
+
+<div class="container">
+  {%for items in results%}
+  <input name="exo" id="{{items[2]}}" value="{{items[2]}}" type="checkbox" checked>
+  <label for="{{items[2]}}"><p>{{items[1]}}</p></label>
+  {%endfor%}
+  <input type="hidden" name="id_stud" id="455" value="{{id_stud}}">
+  <input type=submit value="Valider les exercices">
+</div>
+</form>
+</body>

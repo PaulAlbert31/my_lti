@@ -1,0 +1,18 @@
+<h1>Veuillez selectionner un eleve dans le menu deroulant</h1>
+<FORM action="{{url_for('checkexo')}}" method=post>
+<SELECT name="nom" size="1">
+{%for s in studs%}
+<OPTION>{{s[1]}} {{s[2]}} "{{s[0]}}"
+{%endfor%}
+</SELECT>
+<input type=submit value="Valider le choix de l'eleve">
+</FORM>
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    <ul class=flashes>
+    {% for category, message in messages %}
+      <li class="{{ category }}">{{ message }}</li>
+	  {%endfor%}
+    </ul>
+  {% endif %}
+{% endwith %}

@@ -1,0 +1,21 @@
+<!doctype html>
+<head>
+<script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {inlineMath: [["$","$"],["\\(","\\)"]]}
+  });
+</script>
+	</head>
+    <h1>Voici vos exercices pour la semaine {{nom[0]}} {{nom[1]}}</h1>
+	<h1>Numéro des exercices</h1>
+	{%for num in num_resultats[:-1]%}
+		{{num[0]}} -
+	{%endfor%}
+		{{num_resultats[-1][0]}}
+	<h1>Énoncés</h1>
+	<embed src='static/pdf/2.pdf' width="1000" height="600" type='application/pdf'>
+	<br>
+	<a href="{{ url_for('index2') }}">Retour à l'index</a>

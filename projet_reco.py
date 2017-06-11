@@ -464,7 +464,7 @@ def gen_exo(lti=lti):
 #        cHandler.execute('DELETE * FROM mdl_exos_eleves_recommendation WHERE cours_id=%s AND realised=1',cours_id)
         for eleves in res:
             id_stud=eleves[0]
-            exos=algo.genererFE(id_stud,map(int, comp),8)
+            exos=algo.genererFE(int(id_stud),map(int, comp),8)
             for exo in exos:
                 if exo == None:
                     return render_template('no_exo.html')
@@ -605,6 +605,7 @@ def corr_exo_eff(lti=lti):
         exos=request.form.get('id_exos')
         id_stud=request.form.get('id_stud')
     tab_stud={}
+    [cours_id,q]=lti.user_id
     exos=str(exos)
     exoss=[int(s) for s in exos.split() if s.isdigit()]
     exos=exos.replace('(','')
@@ -613,6 +614,11 @@ def corr_exo_eff(lti=lti):
     exos=exos.replace('L','')
     exoss=[int(s) for s in exos.split() if s.isdigit()]
     j=0
+    database = MySQLdb.connect(host="127.0.0.1",port=3306,user="root",passwd="",db="moodle")
+    cHandler = database.cursor()
+    for items in exoss:
+        cHandler.execute('DELETE FROM mdl_exos_eleves_recommendation WHERE id_exo=%s \
+        AND id_stud=%s AND cours_id=%s',(items,id_stud,cours_id))
     for i in exoss:
         if acquis[j]=='Acquis':
             tab_stud[i]=1
@@ -636,8 +642,16 @@ def corr_exo_eff(lti=lti):
     with open('data.json','w') as data_file:
         data_file.write(results)
     
-    return render_template('testexo.html')
+    return render_template('merci_corr.html')
 
+   
+@app.route('/test',methods=['GET','POST'])
+@lti(request='session', error=error, app=app)
+def test(lti=lti):
+    algo.actualiserNiveaux(int(3))
+    return render_template('testexo.html',res=algo.etudiants[3].niveauxCompetences)
+    
+    
 def set_debugging():    
     """ Debuggage du logging
 

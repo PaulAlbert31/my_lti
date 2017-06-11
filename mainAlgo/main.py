@@ -22,16 +22,20 @@ class Main(object):
         
     def actualiserNiveaux(self, idEtudiant):
         etudiant = self.etudiants[idEtudiant]
-        questions = [self.questions[i] for i in etudiant.resultats if etudiant.resultats[i]!=-1]
-        reponses = [etudiant.resultats[i] for i in etudiant.resultats if etudiant.resultats[i]!=-1]
+        questions = [self.exercices[int(i)] for i in etudiant.resultats if etudiant.resultats[int(i)]!=0]
+        reponses = [etudiant.resultats[int(i)] for i in etudiant.resultats if etudiant.resultats[int(i)]!=0]
         matriceQ = [[1 if k in q.competences else 0 for k in self.competences] for q in questions]
-        
         bnds = [[-10, 10]]*len(self.competences)
         f = lambda x : -vraisemblance(questions, x, matriceQ, reponses)
         opt = optimize.minimize(f, [-10]*len(self.competences), bounds=bnds)
 #        print(opt.x)
 #        print(-opt.fun)
-        etudiant.setNiveaux(opt.x)
+        maj={}
+        i=1
+        for items in opt.x:
+            maj[i]=items
+            i+=1
+        etudiant.setNiveaux(maj)
         
         
     
@@ -39,8 +43,8 @@ class Main(object):
         """Génère une Feuille d'Exercices correspondant à un élève et à des compétences"""
         competences = [self.competences[i] for i in idCompetences]
         etudiant = self.etudiants[idEtudiant]
-        resultats = [self.exercices[i] for i in etudiant.resultats if etudiant.resultats[i]!=-1]
-        reponses = [etudiant.resultats[i] for i in etudiant.resultats if etudiant.resultats[i]!=-1]
+        resultats = [self.exercices[int(i)] for i in etudiant.resultats if etudiant.resultats[int(i)]!=-1]
+        reponses = [etudiant.resultats[int(i)] for i in etudiant.resultats if etudiant.resultats[int(i)]!=-1]
         matriceQ = [[1 if k in q.competences else 0 for k in self.competences] for q in resultats]
         niveauxPred = etudiant.niveauxCompetences
         choixExercices = []

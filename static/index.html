@@ -1,0 +1,33 @@
+<html>
+<head>
+	<link rel=stylesheet type=text/css href="{{ url_for('static', filename='index.css') }}?t=[timestamp]">
+    <title>MIT LTI Flask Sample</title>
+</head>
+<body>
+<h1>Bonjour {{ lti.name }}.</h1>
+<h2> Administration </h2>
+<a href="{{ url_for('index_staff') }}">Vérifier votre rôle</a>
+<br>
+<a href="{{ url_for('teachers_class') }}">Voir vos élèves </a>
+<br>
+<h2> Exercices </h2>
+<a href="{{ url_for('upload_exo') }}">Upload des exercices (tableau excel)</a>
+<br>
+<a href="{{ url_for('upload_latex') }}">Upload une fiche d'exercices (en LaTeX)</a>
+<br>	
+<a href="{{ url_for('see_exos') }}">Voir à quels exercices correspondent des compétences</a>
+<br>
+<a href="{{ url_for('see_competences') }}">Voir à quelles compétences correspondent un exercice</a>
+<br>
+<br>
+<a href="{{ url_for('gen',algo=algo) }}">Assigner les exercices de la semaine</a>
+<br>
+<a href="{{ url_for('select_stud') }}">Verifier les exercices assignés</a>
+<br>
+<a href="{{ url_for('corr') }}">Corriger les exercices</a>
+
+<h2> Etudiant </h2>
+<a href="{{ url_for('get_my_exos') }}">Imprimer mes exercices</a>
+
+</body>
+</html>
