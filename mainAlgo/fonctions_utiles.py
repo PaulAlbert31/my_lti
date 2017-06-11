@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 from math import exp
-import MySQLdb
-
 
 
 def sigmoid(x):
@@ -13,21 +11,19 @@ def proba_juste(theta, d, facilite, Q):
     """Donne en fonction des paramètres la probabilité que la réponse soit juste"""
     K = len(theta)
     s = facilite
-    for k in range(1,K):
-        if not k==172:
-            s += Q[k]*theta[k]*d[k]
+    for k in range(K):
+        s += Q[k]*theta[k]*d[k]
     return sigmoid(s)
 
 
 def proba_reponse(theta, d, facilite, Q, reponse):
     """Donne en fonction des paramètres la probabilité que la réponse corresponde à reponse (=0 ou 1)"""
     p = proba_juste(theta, d, facilite, Q)
-    return (1-p+reponse*(2*p-1))
+    return (1-p + reponse*(2*p-1))
 #    if reponse==1:
 #        return p
 #    else:
 #        return 1-p
-
 
 
 def vraisemblance(questions, theta, matQ, reponses):
@@ -39,7 +35,6 @@ def vraisemblance(questions, theta, matQ, reponses):
 
 
 def esperanceVraisemblance(questions, questionsChoisies, theta, matQ, matQChoisies, reponses):
-    ### à corriger
     L = 1
     # questions contient la liste des questions répondues
     for (i, q) in enumerate(questions):

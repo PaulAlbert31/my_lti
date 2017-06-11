@@ -22,12 +22,13 @@ class Main(object):
         
     def actualiserNiveaux(self, idEtudiant):
         etudiant = self.etudiants[idEtudiant]
-        questions = [self.exercices[int(i)] for i in etudiant.resultats if etudiant.resultats[int(i)]!=0]
-        reponses = [etudiant.resultats[int(i)] for i in etudiant.resultats if etudiant.resultats[int(i)]!=0]
-        matriceQ = [[1 if k in q.competences else 0 for k in self.competences] for q in questions]
-        bnds = [[-10, 10]]*len(self.competences)
-        f = lambda x : -vraisemblance(questions, x, matriceQ, reponses)
-        opt = optimize.minimize(f, [-10]*len(self.competences), bounds=bnds)
+        exercices = [self.exercices[i] for i in etudiant.resultats if etudiant.resultats[i]!=-1]
+        reponses = [etudiant.resultats[i] for i in etudiant.resultats if etudiant.resultats[i]!=-1]
+        matriceQ = [[1 if k in exo.competences else 0 for k in self.competences.values()] for exo in exercices]
+                
+        bnds = [[-1, 1]]*len(self.competences)
+        f = lambda x : -vraisemblance(exercices, x, matriceQ, reponses)
+        opt = optimize.minimize(f, [0]*len(self.competences), bounds=bnds)
 #        print(opt.x)
 #        print(-opt.fun)
         maj={}
@@ -39,13 +40,18 @@ class Main(object):
         
         
     
-    def genererFE(self, idEtudiant, idCompetences, nbExercices):
+    def genererFE(self, idEtudiant, idCompetences, nbExercices, ajouter_prerequis=False):
         """Génère une Feuille d'Exercices correspondant à un élève et à des compétences"""
         competences = [self.competences[i] for i in idCompetences]
+        if ajouter_prerequis:
+            for k in competences:
+                competences = competences + [kp for kp in k.prerequis]
+            # Enlever les doublons
+            competences = list(set(competences))
         etudiant = self.etudiants[idEtudiant]
-        resultats = [self.exercices[int(i)] for i in etudiant.resultats if etudiant.resultats[int(i)]!=-1]
-        reponses = [etudiant.resultats[int(i)] for i in etudiant.resultats if etudiant.resultats[int(i)]!=-1]
-        matriceQ = [[1 if k in q.competences else 0 for k in self.competences] for q in resultats]
+        resultats = [self.exercices[i] for i in etudiant.resultats if etudiant.resultats[i]!=-1]
+        reponses = [etudiant.resultats[i] for i in etudiant.resultats if etudiant.resultats[i]!=-1]
+        matriceQ = [[1 if k in exo.competences else 0 for k in self.competences.values()] for exo in resultats]
         niveauxPred = etudiant.niveauxCompetences
         choixExercices = []
         matQchoisies = []
@@ -58,23 +64,24 @@ class Main(object):
                 # Si l'exercice concerne les compétences concernées et n'est pas déjà choisi
                 if (not exo in choixExercices) and ([k for k in exo.competences if k in competences] != []):
                     matQCourante = [1 if k in exo.competences else 0 for k in self.competences]
-                    bnds = [[-10, 10]]*len(self.competences)
+                    bnds = [[-1, 1]]*len(self.competences)
                     f = lambda x : -esperanceVraisemblance(resultats, choixExercices+[exo], x,  matriceQ, matQchoisies+[matQCourante], reponses)
-                    opt = optimize.minimize(f, [0]*len(self.competences), bounds=bnds)
+                    opt = optimize.minimize(f, [-1]*len(self.competences), bounds=bnds)
                     progres = sum([opt.x[c.nId]-niveauxPred[c.nId] for c in competences])
                     if progres >= maxProgres:
                         niveauxCourant = opt.x
                         maxProgres = progres
                         choixCourant = exo
-            choixExercices.append(choixCourant)
-            matQchoisies.append(matQCourante)
+            if choixCourant != None:
+                choixExercices.append(choixCourant)
+                matQchoisies.append(matQCourante)
             # Une fois l'exo choisi on mets à jour le vecteur de compétences prédit
             niveauxPred = niveauxCourant
         return choixExercices
         
       
     
-    def choisirExercice(self, idEtudiant, idCompetences, ):
+    def choisirExercice(self, idEtudiant, idCompetences):
         maxProgres = float('-inf')
         choixExercice = None
         competences = [self.competences[i] for i in idCompetences]
@@ -82,14 +89,14 @@ class Main(object):
         # On parcours tous les exercices possibles
         resultats = [self.exercices[i] for i in etudiant.resultats if etudiant.resultats[i]!=-1]
         reponses = [etudiant.resultats[i] for i in etudiant.resultats if etudiant.resultats[i]!=-1]
-        matriceQ = [[1 if k in q.competences else 0 for k in self.competences] for q in resultats]
+        matriceQ = [[1 if k in exo.competences else 0 for k in self.competences.values()] for exo in resultats]
         for exo in self.exercices.values():
             # Si l'exercice concerne les compétences concernées
             if [k for k in exo.competences if k in competences] != []:
                 matQChoisie = [1 if k in exo.competences else 0 for k in self.competences]
-                bnds = [[-10, 10]]*len(self.competences)
+                bnds = [[-1, 1]]*len(self.competences)
                 f = lambda x : -esperanceVraisemblance(resultats, [exo], x,  matriceQ, [matQChoisie], reponses)
-                opt = scipy.optimize.minimize(f, [0]*len(self.competences), bounds=bnds)
+                opt = optimize.minimize(f, [-1]*len(self.competences), bounds=bnds)
                 progres = sum([opt.x[c.nId]-etudiant.niveauxCompetences[c.nId] for c in competences])
                 if progres >= maxProgres:
                     maxProgres = progres
@@ -114,11 +121,11 @@ class Main(object):
                 if k in idCompetences:
                     discriminations[k] = 1
                 else:
-                    discriminations[k] = -1                    
+                    discriminations[k] = 0     
         self.exercices[idExercice] = exercice.Exercice(idExercice, enonce, reponse, themes=[self.themes[i] for i in idThemes], competences=[self.competences[i] for i in idCompetences], discriminations=discriminations, facilite=facilite)
 
     def ajouterEtudiant(self,  idEtudiant, prenom, nom, niveauxCompetences, resultats):
-        for k in self.competences:
+        for k in self.exercices:
             if not k in resultats:
                 resultats[k] = -1                  
         self.etudiants[idEtudiant] = etudiant.Etudiant(idEtudiant, prenom, nom, niveauxCompetences, resultats)
@@ -143,19 +150,21 @@ if __name__ == "__main__":
 
     # idExercice, enonce, reponse, idThemes, idCompetences, discriminations, facilite
     main.ajouterExercice(0, "texte", "", [0], [0], {}, 1)
-    main.ajouterExercice(1, "texte", "", [0], [0, 1], {}, 1)
-    main.ajouterExercice(2, "texte", "", [0], [0, 1], {}, 1)
+    main.ajouterExercice(1, "texte", "", [0], [1], {}, 1)
+    main.ajouterExercice(6, "texte", "", [0], [0,2], {}, 1)
+    main.ajouterExercice(5, "texte", "", [0], [0], {}, 1)
 
 
-    main.ajouterEtudiant(0, "Bob", "Smith", {}, {0:0, 1:1, 6:0})
+    main.ajouterEtudiant(0, "Bob", "Smith", {}, {0:1, 1:1, 6:0, 5:-1})
     
     bob = main.etudiants[0]
+    main.actualiserNiveaux(0)
 
     bob.resultats[5]=1
-    
-    
+
     main.actualiserNiveaux(0)
-    print(main.choisirExercice(0, [0]).nId)
-    print([exo.nId for exo in main.genererFE(0, [0], 3)])
+    
+#    print(main.choisirExercice(0, [1, 2]).nId)
+#    print([exo.nId for exo in main.genererFE(0, [1, 2], 3)])
         
 
