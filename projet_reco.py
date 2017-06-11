@@ -636,7 +636,7 @@ def corr_exo_eff(lti=lti):
     algo.actualiserNiveaux(int(id_stud))
     for studs in data['eleves']:
         if studs['id']==int(id_stud):
-            studs['comp'].update(algo.etudiants[int(id_stud)].niveauxCompetences)
+            studs['comp']=algo.etudiants[int(id_stud)].niveauxCompetences
             studs['res']={}
     results=json.dumps(data,indent=4)
     with open('data.json','w') as data_file:

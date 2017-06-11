@@ -18,7 +18,8 @@ class Etudiant(object):
         return self.niveauxCompetences[competenceId]
         
     def setNiveaux(self, niveaux):
-        self.niveauxCompetences = niveaux
+        self.niveauxCompetences = {}
+        self.niveauxCompetences=niveaux
  
     def getCompetences(self):
         return self.niveauxCompetences
