@@ -1,4 +1,73 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Apprentisage</title>
+<link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='checkexo.css') }}" />
 
-	<h1>{{res}}</h1>
-	
-	<a href="{{ url_for('index2') }}">Retour à l'index</a>
+
+</head>
+<body>
+<!-- Main Container -->
+<div class="container"> 
+  <!-- Header -->
+  <header class="header">
+    <h4 class="logo">Apprentissage Adaptatif</h4>
+  </header>
+  
+  <!-- Hero Section -->
+  <section class="intro">
+    
+    <div class="column">
+      <div class="button"><a href="{{ url_for('index2') }}">Home</a></div>
+    </div>
+    
+    <div class="column">
+      <div class="button">Admin</div>
+    </div>
+    
+    <div class="column">
+      <div class="button">Exercice</div>
+    </div>
+    
+    <div class="column">
+      <div class="button">Etudiant</div>
+    </div>
+    
+  </section>
+  
+  <!-- Stats Gallery Section -->
+  <div class="gallery">
+    <div class="thumbnail">
+      <h4>Exercices</h4>
+      <p class="tag">{{res}}</p>
+ 
+      
+      
+      <p class="tag">
+	  <a href="{{ url_for('index2') }}" style="text-decoration:underline;font-weight:bold">Retour à l'index</a>
+      </p>
+      
+    
+    </div>
+  </div>
+  
+  
+  <div class="gallery"></div>
+  
+  
+  
+  <!-- Footer Section -->
+  <footer id="contact">
+    <p class="hero_header">GET IN TOUCH WITH ME</p>
+    <div class="button">like us</div>
+  </footer>
+  
+  <!-- Copyrights Section -->
+  <div class="copyright">&copy;2017 -<strong>Apprentissage</strong></div>
+</div>
+<!-- Main Container Ends -->
+</body>
+</html>

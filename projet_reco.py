@@ -433,7 +433,7 @@ def exos(lti=lti):
 @app.route('/teacher',methods=['GET','POST'])
 @lti(request='session', error=error,role = 'staff', app=app)
 def teachers_class(lti=lti):
-	[coursename,results] = get_params(lti)
+	coursename,results = get_params(lti)
 			
 	return render_template('displayStuds2.html', results=results, coursename=coursename)
  
@@ -648,8 +648,7 @@ def corr_exo_eff(lti=lti):
 @app.route('/test',methods=['GET','POST'])
 @lti(request='session', error=error, app=app)
 def test(lti=lti):
-    algo.actualiserNiveaux(int(3))
-    return render_template('testexo.html',res=algo.etudiants[3].niveauxCompetences)
+    return render_template('testexo.html',res=algo.competences)
     
     
 def set_debugging():    

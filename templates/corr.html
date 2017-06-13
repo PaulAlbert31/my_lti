@@ -1,12 +1,85 @@
-<h1>Veuillez selectionner un eleve dans le menu deroulant</h1>
-<FORM action="{{url_for('corr_exo')}}" method=post>
-<SELECT name="nom" size="1">
-{%for s in studs%}
-<OPTION>{{s[1]}} {{s[2]}} "{{s[0]}}"
-{%endfor%}
-</SELECT>
-<input type=submit value="Valider le choix de l'eleve">
-{%for s in studs%}
-<input type=hidden value={{s[0]}} name="{{s[0]}}">
-{%endfor%}
+<!doctype html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Apprentisage</title>
+<link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='checkexo.css') }}" />
+</head>
+<body>
+<!-- Main Container -->
+<div class="container"> 
+  <!-- Header -->
+  <header class="header">
+    <h4 class="logo">Apprentissage Adaptatif</h4>
+  </header>
+  
+  <!-- Hero Section -->
+  <section class="intro">
+    
+    <div class="column">
+      <div class="button"><a href="{{ url_for('index2') }}">Home</a></div>
+    </div>
+    
+    <div class="column">
+      <div class="button">Admin</div>
+    </div>
+    
+    <div class="column">
+      <div class="button">Exercice</div>
+    </div>
+    
+    <div class="column">
+      <div class="button">Etudiant</div>
+    </div>
+    
+  </section>
+  
+  <!-- Stats Gallery Section -->
+  <div class="gallery">
+    <div class="thumbnail">
+      <h4>Administration</h4>
+      <p class="tag">Veuillez selectionner un eleve dans le menu deroulant</p>
+      
+     
+ <FORM action="{{url_for('corr_exo')}}" method=post>
+    <p class="tag">
+    <SELECT name="nom" size="1">
+        {%for s in studs%}
+        <OPTION>{{s[1]}} {{s[2]}} "{{s[0]}}"
+        {%endfor%}
+    </SELECT>
+    </p>
+    
+    <p class="tag">
+    <input type=submit value="Valider le choix de l'eleve">
+    </p>
+    
+    <p>
+    {%for s in studs%}
+    <input type=hidden value={{s[0]}} name="{{s[0]}}">
+    {%endfor%}
 </FORM>
+      </p>
+    
+    </div>
+  </div>
+  
+  
+  <div class="gallery"></div>
+  
+  
+  
+  <!-- Footer Section -->
+  <footer id="contact">
+    <p class="hero_header">GET IN TOUCH WITH ME</p>
+    <div class="button">like us</div>
+  </footer>
+  
+  <!-- Copyrights Section -->
+  <div class="copyright">&copy;2017 -<strong>Apprentissage</strong></div>
+</div>
+<!-- Main Container Ends -->
+</body>
+</html>

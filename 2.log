@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (MiKTeX 2.9.6300 64-bit) (preloaded format=pdflatex 2017.5.31)  7 JUN 2017 09:10
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (MiKTeX 2.9.6300 64-bit) (preloaded format=pdflatex 2017.5.31)  13 JUN 2017 17:45
 entering extended mode
 **./static/pdf/2.tex
 (static/pdf/2.tex
@@ -948,26 +948,27 @@ G,.JBIG2,.JB2,.eps]
 (grfext)             \AppendGraphicsExtensions on input line 456.
 )
 ABD: EveryShipout initializing macros [1{C:/Users/Paul/AppData/Local/MiKTeX/2.9
-/pdftex/config/pdftex.map}] (2.aux) ) 
+/pdftex/config/pdftex.map}] [2] (2.aux) ) 
 Here is how much of TeX's memory you used:
- 15312 strings out of 493328
- 281113 string characters out of 3146911
- 325317 words of memory out of 3000000
- 18372 multiletter control sequences out of 15000+200000
- 15402 words of font info for 55 fonts, out of 3000000 for 9000
+ 15318 strings out of 493328
+ 281181 string characters out of 3146911
+ 327317 words of memory out of 3000000
+ 18376 multiletter control sequences out of 15000+200000
+ 16857 words of font info for 57 fonts, out of 3000000 for 9000
  1302 hyphenation exceptions out of 8191
- 48i,5n,54p,418b,439s stack positions out of 5000i,500n,10000p,200000b,50000s
- <C:\Users\Paul\AppData\Local\MiKTeX\2.9\f
-onts\pk\ljfour\jknappen\ec\dpi600\ecrm0800.pk> <C:\Users\Paul\AppData\Local\MiK
-TeX\2.9\fonts\pk\ljfour\jknappen\ec\dpi600\ecrm1095.pk> <C:\Users\Paul\AppData\
-Local\MiKTeX\2.9\fonts\pk\ljfour\jknappen\ec\dpi600\ecbx1095.pk><D:/MiKTeX/font
-s/type1/public/amsfonts/cm/cmmi10.pfb><D:/MiKTeX/fonts/type1/public/amsfonts/cm
-/cmr10.pfb><D:/MiKTeX/fonts/type1/public/amsfonts/cm/cmr8.pfb><D:/MiKTeX/fonts/
-type1/public/amsfonts/cm/cmsy10.pfb><D:/MiKTeX/fonts/type1/public/amsfonts/symb
-ols/msbm10.pfb>
-Output written on 2.pdf (1 page, 62647 bytes).
+ 48i,6n,54p,418b,439s stack positions out of 5000i,500n,10000p,200000b,50000s
+ <C:\Users\Paul\AppData\Local\MiKTeX\2
+.9\fonts\pk\ljfour\jknappen\ec\dpi600\ecti1095.pk> <C:\Users\Paul\AppData\Local
+\MiKTeX\2.9\fonts\pk\ljfour\jknappen\ec\dpi600\ecrm0800.pk> <C:\Users\Paul\AppD
+ata\Local\MiKTeX\2.9\fonts\pk\ljfour\jknappen\ec\dpi600\ecrm1095.pk> <C:\Users\
+Paul\AppData\Local\MiKTeX\2.9\fonts\pk\ljfour\jknappen\ec\dpi600\ecbx1095.pk><D
+:/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi10.pfb><D:/MiKTeX/fonts/type1/publi
+c/amsfonts/cm/cmr10.pfb><D:/MiKTeX/fonts/type1/public/amsfonts/cm/cmr8.pfb><D:/
+MiKTeX/fonts/type1/public/amsfonts/cm/cmsy10.pfb><D:/MiKTeX/fonts/type1/public/
+amsfonts/symbols/msbm10.pfb>
+Output written on 2.pdf (2 pages, 76460 bytes).
 PDF statistics:
- 100 PDF objects out of 1000 (max. 8388607)
+ 130 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
  13 words of extra memory for PDF output out of 10000 (max. 10000000)
 

@@ -1,12 +1,85 @@
-<h1>Quelles compétences favoriser cette semaine ?</h1>
+<!doctype html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Apprentisage</title>
+<link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='checkexo.css') }}" />
+</head>
 <body>
-<form action="{{url_for('gen_exo',algo=algo)}}" method=post >
-	<input type=submit value="Valider les competences">	
-	<br>
-  {%for items in sf%}
-  <input name="comp" id="{{items[0]}}" value="{{items[0]}}" type="checkbox">
-  <label for="{{items[0]}}"><p>{{items[1].decode("latin1")}}</p></label>
-  {%endfor%}
-  <input type=submit value="Valider les competences">
-</form>
+<!-- Main Container -->
+<div class="container"> 
+  <!-- Header -->
+  <header class="header">
+    <h4 class="logo">Apprentissage Adaptatif</h4>
+  </header>
+  
+  <!-- Hero Section -->
+  <section class="intro">
+    
+    <div class="column">
+      <div class="button"><a href="{{ url_for('index2') }}">Home</a></div>
+    </div>
+    
+    <div class="column">
+      <div class="button">Admin</div>
+    </div>
+    
+    <div class="column">
+      <div class="button">Exercice</div>
+    </div>
+    
+    <div class="column">
+      <div class="button">Etudiant</div>
+    </div>
+    
+  </section>
+  
+  <!-- Stats Gallery Section -->
+  <div class="gallery">
+    <div class="thumbnail">
+      <h4>Administration</h4>
+      <p class="tag">Quelles compétences favoriser cette semaine ?</p>
+      
+    
+    
+    <form action="{{url_for('gen_exo',algo=algo)}}" method=post >
+       <p class="tag">
+        <input type=submit value="Valider les competences">
+       </p>
+            <br>
+            
+       
+        {%for items in sf%}
+        <input name="comp" id="{{items[0]}}" value="{{items[0]}}" type="checkbox">
+        <label for="{{items[0]}}">
+        <p>{{items[1].decode("latin1")}}</p></label>
+        {%endfor%}
+       
+             <p class="tag">   
+        <input type=submit value="Valider les competences">
+        </p>
+    </form>
+    
+    
+    </div>
+  </div>
+  
+  
+  <div class="gallery"></div>
+  
+  
+  
+  <!-- Footer Section -->
+  <footer id="contact">
+    <p class="hero_header">GET IN TOUCH WITH ME</p>
+    <div class="button">like us</div>
+  </footer>
+  
+  <!-- Copyrights Section -->
+  <div class="copyright">&copy;2017 -<strong>Apprentissage</strong></div>
+</div>
+<!-- Main Container Ends -->
 </body>
+</html>

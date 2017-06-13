@@ -1,32 +1,110 @@
 <!doctype html>
+<html>
 <head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Apprentisage</title>
+<link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='checkexo.css') }}" />
+
 <script type="text/javascript" async
-  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML">
+    src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML">
 </script>
 <script type="text/x-mathjax-config">
-  MathJax.Hub.Config({
-    tex2jax: {inlineMath: [["$","$"],["\\(","\\)"]]}
-  });
+    MathJax.Hub.Config({
+                       tex2jax: {inlineMath: [["$","$"],["\\(","\\)"]]}
+                       });
 </script>
-	</head>
-    <h1>Exercices attribués à {{nom[0]}} {{nom[1]}}</h1>
-	
-	<h1>Numéro des exercices</h1>
-	<form action="{{url_for('send_exo')}}" method=post>
-      <p><input name="exo" id="1" value="1" type="checkbox" checked>
-	  <input type="hidden" name="exo_id" value="{{num_resultats}}"/>
-	  <input type="hidden" name="id_stud" value="{{id_stud}}"/>
-	  <label for="1"><p>{%for num in num_resultats[:-1]%}
-		{{num}} -
-	{%endfor%}
-		{{num_resultats[-1]}}</p></label>
-      <input type=submit value="Envoyer les exercices">
-    </form>
-	
-	<h1><a href="{{ url_for('checkexo') }}">Corriger</a> les exercies</h1>
-	
-	<h1>Énoncés</h1>
-	{%for en in resultats%}
-    <p>{{en}}</p>
-	<br>
-	{%endfor%}
+
+</head>
+<body>
+<!-- Main Container -->
+<div class="container"> 
+  <!-- Header -->
+  <header class="header">
+    <h4 class="logo">Apprentissage Adaptatif</h4>
+  </header>
+  
+  <!-- Hero Section -->
+  <section class="intro">
+    
+    <div class="column">
+      <div class="button"><a href="{{ url_for('index2') }}">Home</a></div>
+    </div>
+    
+    <div class="column">
+      <div class="button">Admin</div>
+    </div>
+    
+    <div class="column">
+      <div class="button">Exercice</div>
+    </div>
+    
+    <div class="column">
+      <div class="button">Etudiant</div>
+    </div>
+    
+  </section>
+  
+  <!-- Stats Gallery Section -->
+  <div class="gallery">
+    <div class="thumbnail">
+      <h4>Exercices</h4>
+      <p class="tag">Exercices attribués à {{nom[0]}} {{nom[1]}}</p>
+      <br>
+      <p class="tag">Numéro des exercices</p>
+      
+      <form action="{{url_for('send_exo')}}" method=post>
+    	<p>
+       <input name="exo" id="1" value="1" type="checkbox" checked>
+       <input type="hidden" name="exo_id" value="{{num_resultats}}"/>
+       <input type="hidden" name="id_stud" value="{{id_stud}}"/>
+       </p>
+        
+        <label for="1">
+           <p>{%for num in num_resultats[:-1]%}
+            {{num}} -
+            {%endfor%}
+            {{num_resultats[-1]}}
+            </p>
+        </label>
+        
+        <p class="tag">
+        <input type=submit value="Envoyer les exercices">
+        </p>
+      </form>
+      
+      <p class="tag">
+      <a href="{{ url_for('checkexo') }}" style="text-decoration:underline;font-weight:bold">Corriger</a> les exercies
+      </p>
+      
+      <p class="tag">Énoncés</p>
+      {%for en in resultats%}
+		<p>{{en}}</p>
+		<br>
+	  {%endfor%}
+      
+ 
+      
+  
+    
+    </div>
+  </div>
+  
+  
+  <div class="gallery"></div>
+  
+  
+  
+  <!-- Footer Section -->
+  <footer id="contact">
+    <p class="hero_header">GET IN TOUCH WITH ME</p>
+    <div class="button">like us</div>
+  </footer>
+  
+  <!-- Copyrights Section -->
+  <div class="copyright">&copy;2017 -<strong>Apprentissage</strong></div>
+</div>
+<!-- Main Container Ends -->
+</body>
+</html>

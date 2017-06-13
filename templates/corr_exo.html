@@ -1,18 +1,94 @@
-
-<form method=post action="{{url_for('corr_exo_eff')}}">
+<!doctype html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Apprentisage</title>
+<link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='checkexo.css') }}" />
+</head>
+<body>
+<!-- Main Container -->
+<div class="container"> 
+  <!-- Header -->
+  <header class="header">
+    <h4 class="logo">Apprentissage Adaptatif</h4>
+  </header>
   
-<fieldset>
-<legend>Exercices pour {{nom[0]}} {{nom[1]}}</legend>
-{%for items in exos%}
-<legend>Exercice {{items[0]}}</legend> <SELECT name='exo' id='{{items[0]}}' size='1'>
-	<option>Acquis
-	<option>En cours d'acquisition
-	<option>Non acquis
-	</SELECT>
-{%endfor%}
-</SELECT>
-</fieldset>
-<input type="hidden" name="id_exos" value="{{exos}}"/>
-<input type="hidden" name="id_stud" value="{{id_stud}}"/>
-<input type=submit value="Terminer">
+  <!-- Hero Section -->
+  <section class="intro">
+    
+    <div class="column">
+      <div class="button"><a href="{{ url_for('index2') }}">Home</a></div>
+    </div>
+    
+    <div class="column">
+      <div class="button">Admin</div>
+    </div>
+    
+    <div class="column">
+      <div class="button">Exercice</div>
+    </div>
+    
+    <div class="column">
+      <div class="button">Etudiant</div>
+    </div>
+    
+  </section>
+  
+  <!-- Stats Gallery Section -->
+  <div class="gallery">
+    <div class="thumbnail">
+      <h4>Exercices</h4>
+ 
+      
+  <form method=post action="{{url_for('corr_exo_eff')}}">
+    
+    <fieldset>
+        <legend>Exercices pour {{nom[0]}} {{nom[1]}}</legend>
+        
+        {%for items in exos%}
+        
+       <p> Exercice{{items[0]}}
+       </p>
+        
+        <p class="tag">
+        <SELECT name='exo' id='{{items[0]}}' size='1'>
+            <option>Acquis
+            <option>En cours d'acquisition
+            <option>Non acquis
+        </SELECT>
+        </p>
+        {%endfor%}
+        </SELECT>
+    </fieldset>
+    
+    <p class="tag">
+    <input type="hidden" name="id_exos" value="{{exos}}"/>
+    <input type="hidden" name="id_stud" value="{{id_stud}}"/>
+    <input type=submit value="Terminer">
+    </p>
 </form>
+
+  
+    
+    </div>
+  </div>
+  
+  
+  <div class="gallery"></div>
+  
+  
+  
+  <!-- Footer Section -->
+  <footer id="contact">
+    <p class="hero_header">GET IN TOUCH WITH ME</p>
+    <div class="button">like us</div>
+  </footer>
+  
+  <!-- Copyrights Section -->
+  <div class="copyright">&copy;2017 -<strong>Apprentissage</strong></div>
+</div>
+<!-- Main Container Ends -->
+</body>
+</html>

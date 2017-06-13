@@ -4,8 +4,8 @@
 <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>apprentisage</title>
-  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='simpleGridTemplate.css') }}?t=[timestamp]">
+<title>Apprentisage</title>
+<link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='simpleGridTemplate.css') }}" />
 </head>
 <body>
 <!-- Main Container -->
@@ -18,7 +18,7 @@
   <!-- Hero Section -->
   <section class="intro">
     <div class="column">
-      <h3 style="text-align: center">Bonjour {{ lti.name }}</h3>
+      <h3 style="text-align: left">Bonjour {{ lti.name }}</h3>
     </div>
   </section>
   
@@ -28,11 +28,11 @@
       <h4>Administration</h4>
       <p class="tag"><a href="{{ url_for('index_staff') }}">Vérifier votre rôle</a></p>
       
-      <p class="tag"><a href="{{ url_for('teachers_class') }}">Voir vos élèves </a></p>
+      <!-- <p class="tag"><a href="{{ url_for('teachers_class') }}">Voir vos élèves </a></p> -->
     
     </div>
     <div class="thumbnail">
-      <h4>Mise à jour des exercices</h4>
+      <h4>Exercices<br>upload</h4>
       <p class="tag"><a href="{{ url_for('upload_exo') }}">Upload des exercices (tableau excel)</a></p>
       <p class="tag"><a href="{{ url_for('upload_latex') }}">Upload une fiche d'exercices (en LaTeX)</a></p>
       <p class="tag"><a href="{{ url_for('see_exos') }}">Voir à quels exercices correspondent des compétences</a></p>
@@ -41,20 +41,24 @@
     </div>
     
     <div class="thumbnail">
-      <h4>Asssigner et corriger</h4>
+      <h4>Exercices<br>assigner</h4>
 	  <p class="tag"><a href="{{ url_for('gen',algo=algo) }}">Assigner les exercices de la semaine</a></p>
       <p class="tag"><a href="{{ url_for('select_stud') }}">Verifier les exercices assignés</a></p>
       <p class="tag"><a href="{{ url_for('corr') }}">Corriger les exercices</a></p>
     </div>
     <div class="thumbnail">
-      <h4>Accès étudiant</h4>
+      <h4>Etudiant</h4>
       <p class="tag"><a href="{{ url_for('get_my_exos') }}">Imprimer mes exercices</a></p>
-	  <p class="tag"><a href="{{ url_for('test') }}">test</a></p>
     </div>    
 
   </div>
   <div class="gallery"></div>
   
+  <!-- Footer Section -->
+  <footer id="contact">
+    <p class="hero_header">GET IN TOUCH WITH ME</p>
+    <div class="button">like us</div>
+  </footer>
   
   <!-- Copyrights Section -->
   <div class="copyright">&copy;2017 -<strong>Apprentissage</strong></div>

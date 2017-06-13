@@ -1,5 +1,77 @@
-<h1>Les exercices ont été envoyés aux élèves, il ont 6 jours pour les travailler.</h1>
-<h1>Si vous désirez visionner les exercices attribués à chaque elève et les vérifier, suivez le lien ci dessous.</h1>
-<br>
-<a href="{{ url_for('select_stud') }}">Vérifier les exercices attribués</a><br>
-<a href="{{ url_for('index2') }}">Retour à l'index</a>
+<!doctype html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Apprentisage</title>
+<link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='checkexo.css') }}" />
+
+
+</head>
+<body>
+<!-- Main Container -->
+<div class="container"> 
+  <!-- Header -->
+  <header class="header">
+    <h4 class="logo">Apprentissage Adaptatif</h4>
+  </header>
+  
+  <!-- Hero Section -->
+  <section class="intro">
+    
+    <div class="column">
+      <div class="button"><a href="{{ url_for('index2') }}">Home</a></div>
+    </div>
+    
+    <div class="column">
+      <div class="button">Admin</div>
+    </div>
+    
+    <div class="column">
+      <div class="button">Exercice</div>
+    </div>
+    
+    <div class="column">
+      <div class="button">Etudiant</div>
+    </div>
+    
+  </section>
+  
+  <!-- Stats Gallery Section -->
+  <div class="gallery">
+    <div class="thumbnail">
+      <h4>Exercices</h4>
+      <p class="tag">Les exercices ont été envoyés aux élèves, il ont 6 jours pour les travailler.</p>
+      <p class="tag">Si vous désirez visionner les exercices attribués à chaque elève et les vérifier, suivez le lien ci dessous.</p>
+      
+      
+      <p class="tag">
+    
+      <a href="{{ url_for('select_stud') }}" style="text-decoration:underline;font-weight:bold">Vérifier les exercices attribués</a>
+      </p>
+      <p class="tag">
+	  <a href="{{ url_for('index2') }}" style="text-decoration:underline;font-weight:bold">Retour à l'index</a>
+      </p>
+      
+    
+    </div>
+  </div>
+  
+  
+  <div class="gallery"></div>
+  
+  
+  
+  <!-- Footer Section -->
+  <footer id="contact">
+    <p class="hero_header">GET IN TOUCH WITH ME</p>
+    <div class="button">like us</div>
+  </footer>
+  
+  <!-- Copyrights Section -->
+  <div class="copyright">&copy;2017 -<strong>Apprentissage</strong></div>
+</div>
+<!-- Main Container Ends -->
+</body>
+</html>
